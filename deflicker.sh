@@ -43,7 +43,7 @@ function deflicker(){
 
 function version(){
         name=$(basename $0)
-        echo -e "${name}: version $version"
+        echo -e "${name}: version ${version}"
         exit 0
 }
 

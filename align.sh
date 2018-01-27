@@ -131,7 +131,7 @@ function align_images(){
 
 function version(){
         name=$(basename $0)
-        echo -e "${name}: version $version"
+        echo -e "${name}: version ${version}"
         exit 0
 }
 
