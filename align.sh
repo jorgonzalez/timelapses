@@ -2,7 +2,7 @@
 #
 #	Author:		Jorge González
 #
-# 	Description:	Script to align images in a directory. Uses 
+# 	Description:	Script to align images in a directory. Uses align_image_stack binary from hugin.
 #
 #	Version:	0.6
 #
