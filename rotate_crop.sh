@@ -2,7 +2,7 @@
 #
 #	Author:		Jorge González
 #
-# 	Description:	Script to align rotate and crop batches of images in the same directory
+# 	Description:	Script to align rotate and crop batches of images in the same directory.
 #
 #	Version:	0.3
 #

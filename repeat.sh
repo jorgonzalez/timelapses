@@ -2,8 +2,7 @@
 #
 #       Author:         Jorge González
 #
-#       Description:    Script to generate a given number of files out of a given directory and the number
-#			of wanted images.
+#       Description:    Script to generate a given number of files out of a given directory and the number of wanted images.
 #
 #       Version:        0.1
 #
