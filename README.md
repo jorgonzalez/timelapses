@@ -44,3 +44,7 @@ Scripts to help processing images for timelapses
 
 ## split.sh
  	Description:	Script to compose a batch of images using two directories as source.
+
+## stabilize.sh
+ 	Description:	Script to stabilize a shaky video.
+
