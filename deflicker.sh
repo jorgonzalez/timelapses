@@ -17,8 +17,12 @@ mencoder=/usr/bin/mencoder
 mplayer=/usr/bin/mplayer
 
 #Check if we have all the needed software
-if [[ ! -e '/usr/bin/mencoder' ]]; then
-        echo "You are missing mencoder, please install it for your distribution"
+if [[ ! -e ${mencoder} ]]; then
+        echo "You are missing ${mencoder}, please install it for your distribution"
+        exit 1
+fi
+if [[ ! -e ${mplayer} ]]; then
+        echo "You are missing ${mplayer}, please install it for your distribution"
         exit 1
 fi
 
