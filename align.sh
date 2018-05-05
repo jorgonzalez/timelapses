@@ -142,7 +142,7 @@ function usage(){
 	echo -e "\t-p (OPTIONAL) number of control points between images (default 15)"
 	echo -e "\t-g (OPTIONAL) grid, break the image into a rectangular grid (default 1)"
 	echo -e "\t-n (OPTIONAL) do not use first image as base model"
-	echo -e "\t-y {OPTIONAL} copy original into ORIGINA_aligned"
+	echo -e "\t-y {OPTIONAL} copy original into ORIGINAL_aligned"
         echo -e "\t-v show version number"
         echo -e "\t-h show this help"
         exit 0
