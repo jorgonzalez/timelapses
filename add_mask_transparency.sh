@@ -4,16 +4,17 @@
 #
 # 	Description:	Script to apply a mask to a set of pictures in an directory.
 #
-#	Version:	0.2
+#	Version:	0.3
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option progressive application of the mask; reverse progression of the mask.
+#			v0.4: preview.
 #
-#	Future imprv.:	Preview.
+#	Future imprv.:	
 #
 
 #Some variables
-version=0.2
+version=0.3
 mogrify=/usr/bin/mogrify-im6
 convert=/usr/bin/convert-im6
 identify=/usr/bin/identify-im6
@@ -40,37 +41,66 @@ function mask(){
 	j=0
 
 	if [[ "${progressive}" != "y" && "${reverse}" != "y" ]]; then
-		for i in `ls -al ${dir} | grep JPG | grep DSC | awk '{ print $9 }'`; do
-			echo -e -n "\rModifying image ${j}/${total_images}"
-			${convert} ${dir}/${i} -page +0+0 ${mask} -flatten ${dir}/${i}
-			let j=${j}+1
-		done
+		if [[ "${preview}" == "y" ]]; then
+			echo -e -n "\rModifying image ${dir}/${file}"
+			${convert} ${dir}/${file} -page +0+0 ${mask} -flatten ${dir}/A_preview.JPG
+		else
+			rm ${dir}/A_preview.JPG 2>/dev/null
+			for i in `ls -al ${dir} | grep JPG | grep DSC | awk '{ print $9 }'`; do
+				echo -e -n "\rModifying image ${j}/${total_images}"
+				${convert} ${dir}/${i} -page +0+0 ${mask} -flatten ${dir}/${i}
+				let j=${j}+1
+			done
+		fi
+	fi
 	elif [[ "${progressive}" == "y" ]]; then
 		perc=`echo "100/(${total_images}-1)" | bc -l | cut -c -4`
 		j=${total_images}
-		for i in `ls -al ${dir} | grep JPG | grep DSC | awk '{ print $9 }'`; do
-			echo -e -n "\rModifying image ${j}/${total_images}"
-			file_num=`echo ${i} | cut -b 5-8`
+		if [[ "${preview}" == "y" ]]; then
+			echo -e -n "\rModifying image ${dir}/${file}"
+			file_num=`echo ${file} | cut -b 5-8`
 			curr_perc=`echo "${j}*${perc}" | bc -l | cut -c -4`
 			${convert} ${mask} -alpha set -channel A -evaluate subtract ${curr_perc}% ${dir}/mask_${file_num}.PNG
 			let j=${j}-1
-			${convert} ${dir}/${i} -page +0+0 ${dir}/mask_${file_num}.PNG -flatten ${dir}/${i}
+			${convert} ${dir}/${file} -page +0+0 ${dir}/mask_${file_num}.PNG -flatten ${dir}/A_preview.JPG
 			rm ${dir}/mask_${file_num}.PNG
-			let j=${j}+1
-		done
+		else
+			for i in `ls -al ${dir} | grep JPG | grep DSC | awk '{ print $9 }'`; do
+				rm ${dir}/A_preview.JPG 2>/dev/null
+				echo -e -n "\rModifying image ${j}/${total_images}"
+				file_num=`echo ${i} | cut -b 5-8`
+				curr_perc=`echo "${j}*${perc}" | bc -l | cut -c -4`
+				${convert} ${mask} -alpha set -channel A -evaluate subtract ${curr_perc}% ${dir}/mask_${file_num}.PNG
+				let j=${j}-1
+				${convert} ${dir}/${i} -page +0+0 ${dir}/mask_${file_num}.PNG -flatten ${dir}/${i}
+				rm ${dir}/mask_${file_num}.PNG
+				let j=${j}+1
+			done
+		fi
 	elif [[ "${reverse}" == "y" ]]; then
 		perc=`echo "100/(${total_images}-1)" | bc -l | cut -c -4`
 		j=0
-		for i in `ls -al ${dir} | grep JPG | grep DSC | awk '{ print $9 }'`; do
-			echo -e -n "\rModifying image ${j}/${total_images}"
-			file_num=`echo ${i} | cut -b 5-8`
+		if [[ "${preview}" == "y" ]]; then
+			echo -e -n "\rModifying image ${dir}/${file}"
+			file_num=`echo ${file} | cut -b 5-8`
 			curr_perc=`echo "${j}*${perc}" | bc -l | cut -c -4`
 			${convert} ${mask} -alpha set -channel A -evaluate subtract ${curr_perc}% ${dir}/mask_${file_num}.PNG
 			let j=${j}+1
-			${convert} ${dir}/${i} -page +0+0 ${dir}/mask_${file_num}.PNG -flatten ${dir}/${i}
+			${convert} ${dir}/${file} -page +0+0 ${dir}/mask_${file_num}.PNG -flatten ${dir}/A_preview.JPG
 			rm ${dir}/mask_${file_num}.PNG
-			let j=${j}+1
-		done
+		else
+			for i in `ls -al ${dir} | grep JPG | grep DSC | awk '{ print $9 }'`; do
+				rm ${dir}/A_preview.JPG 2>/dev/null
+				echo -e -n "\rModifying image ${j}/${total_images}"
+				file_num=`echo ${i} | cut -b 5-8`
+				curr_perc=`echo "${j}*${perc}" | bc -l | cut -c -4`
+				${convert} ${mask} -alpha set -channel A -evaluate subtract ${curr_perc}% ${dir}/mask_${file_num}.PNG
+				let j=${j}+1
+				${convert} ${dir}/${i} -page +0+0 ${dir}/mask_${file_num}.PNG -flatten ${dir}/${i}
+				rm ${dir}/mask_${file_num}.PNG
+				let j=${j}+1
+			done
+		fi
 	fi
 	echo -e "\nDone!"
 }
@@ -82,11 +112,12 @@ function version(){
 }
 
 function usage(){
-        echo -e "./$(basename $0) -d <VALUE> -m <VALUE> -p -r"
+        echo -e "./$(basename $0) -d <VALUE> -m <VALUE> -g -r"
         echo -e "\t-d directory where the files are"
 	echo -e "\t-m path to the mask file"
-	echo -e "\t-p OPTIONAL: progressive, will apply mask from 100% transparency to 0%"
+	echo -e "\t-g OPTIONAL: progressive, will apply mask from 100% transparency to 0%"
 	echo -e "\t-r OPTIONAL: reverse, will apply mask from 0% transparency to 100%"
+	echo -e "\t-p OPTIONAL: (preview) applies the modifications to the first foto to see the result"
         echo -e "\t-v show version number"
         echo -e "\t-h show this help"
         exit 0
@@ -96,15 +127,17 @@ function main(){
         mask
 }
 
-while getopts "d:m:prhv?" arg; do
+while getopts "d:m:prghv?" arg; do
         case ${arg} in
 		d)dir=${OPTARG}
 		;;
 		m)mask=${OPTARG}
 		;;
-		p)progressive=y
+		g)progressive=y
 		;;
 		r)reverse=y
+		;;
+		p)preview=y
 		;;
                 v)version && exit 0
 		;;
