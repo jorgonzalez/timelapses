@@ -8,7 +8,7 @@
 #			contrast, normalize the contrast in the pictures (by histogram), and fade in-out.
 #			Requires imagemagick, ffmpeg and mencoder.
 #
-#	Version:	0.24
+#	Version:	0.25
 #
 #	Modifications:	v0.1; fade in-out feature.
 #			v0.2; crawl through directories in the output directory.
@@ -34,6 +34,7 @@
 #			v0.22: Change tint color
 #			v0.23: Deflicker video; fix preview for tint
 #			v0.24: Change levels of white point, black point.
+#			v0.25: Added ugly code for rounidng image proportions when resizing
 #
 #	Future imprv.:	Beter argument check and validation.
 #			Cancel video creation if dimensions exceed certain overlay.
@@ -99,8 +100,6 @@ function timestamp(){
 
 function create_video(){
 	if [[ "${directories}" == "y" ]]; then
-#		for dir in `ls -ald ${SourceDir}/* | grep -vw "berlin_festival_of_lights_brandemburgertor_1_2017_mod" | awk '{ print $9 }'`; do
-#		for dir in `ls -ald ${SourceDir}/* | grep -w "berlin_festival_of_lights_marienkirche_2017_mod" | awk '{ print $9 }'`; do
 		for dir in `ls -ald ${SourceDir}/* | awk '{ print $9 }'`; do
 			dir=`pwd`/${dir}
 			create_timelapse ${dir}
@@ -134,9 +133,7 @@ function create_timelapse(){
 		echo "Working on \"${dir}\"..."
 	fi
 
-#	width=`identify ${dir}/${file} | awk '{ print $3 }' | awk -F"x" '{ print $1 }'`
 	width=`${identify} ${dir}/${file} | awk '{ print $3 }' | awk -F"x" '{ print $1 }'`
-#	height=`identify ${dir}/${file} | awk '{ print $3 }' | awk -F"x" '{ print $2 }'`
 	height=`${identify} ${dir}/${file} | awk '{ print $3 }' | awk -F"x" '{ print $2 }'`
 
 	if [[ "${preview}" == "y" ]]; then
@@ -251,7 +248,16 @@ function create_timelapse(){
 
 	#Resize
 	if [[ ! -z "${new_width}" ]]; then
+		#ugly code for rounding the proportions of the image
+		orig_prop=`echo "${width}/${height}" | bc -l | cut -c -6`
 		prop=`echo "${width}/${height}" | bc -l | cut -c -4`
+		orig_prop_h=`echo "(${orig_prop}+0.002)" | bc -l | cut -c -4`
+		orig_prop_l=`echo "(${orig_prop}-0.002)" | bc -l | cut -c -4`
+		if [[ "${orig_prop_h}" != "${prop}" && "${orig_prop_l}" == "${prop}" ]]; then
+			prop=${orig_prop_h}
+		elif [[ "${orig_prop_h}" == "${prop}" && "${orig_prop_l}" != "${prop}" ]]; then
+			prop=${orig_prop_l}
+		fi
 		height=`echo "${new_width}/${prop}" | bc`
 		width=${new_width}
 
@@ -486,7 +492,11 @@ function create_timelapse(){
 		else
 			quality="shit"
 		fi
-		finaloutfile='timelapse_'${outname}'_'${quality}'_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
+		if [[ "${fps}" -ne 25 ]]; then
+			finaloutfile='timelapse_'${outname}'_'${quality}'_'${fps}'fps_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
+		else
+			finaloutfile='timelapse_'${outname}'_'${quality}'_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
+		fi
 		finaloutfile=${outdir}/${finaloutfile}
 		mv ${outfile} ${finaloutfile}
 
