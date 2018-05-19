@@ -1,5 +1,6 @@
 # timelapses
-Scripts to help processing images for timelapses
+Scripts to help processing batches of images for timelapse photography.
+All scripts expect the names of the photos begin with DSC and that the sorting is ascendent (e.g. 0001-0100).
 
 ## add_mask_transparency.sh
  	Description:	Script to apply a mask to a set of pictures in an directory.
@@ -42,9 +43,11 @@ Scripts to help processing images for timelapses
 ## shake.sh
  	Description:	Script to shake an image using the base image and moving it to the sides using transparency.
 
+## sliding_bars.sh
+ 	Description:	Script to fade-in fade-out a video using bars of adjustable size that dissapear/appear.
+
 ## split.sh
  	Description:	Script to compose a batch of images using two directories as source.
 
 ## stabilize.sh
  	Description:	Script to stabilize a shaky video.
-
