@@ -7,6 +7,7 @@
 #	Version:	0.1
 #
 #	Modifications:	v0.1; first version.
+#                       v0.2; hardcoded binaries removed for which
 #
 #	Future imprv.:	Beter argument check and validation.
 #			Proper option function.
@@ -14,10 +15,11 @@
 #
 
 #Some variables
-version=0.1
-mplayer=/usr/bin/mplayer
+version=0.2
+mplayer=$(which mplayer)
 
 DIR=${1}
+
 
 #Check if we have all the needed software
 if [[ ! -e ${mplayer} ]]; then

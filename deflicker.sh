@@ -7,14 +7,16 @@
 #	Version:	0.1
 #
 #	Modifications:	v0.1; first version.
+#                       v0.2; hardcoded binaries removed for which
 #
 #	Future imprv.:	Preview.
 #
 
 #Some variables
-version=0.1
-mencoder=/usr/bin/mencoder
-mplayer=/usr/bin/mplayer
+version=0.2
+mencoder=$(which mencoder)
+mplayer=$(which mplayer)
+
 
 #Check if we have all the needed software
 if [[ ! -e ${mencoder} ]]; then

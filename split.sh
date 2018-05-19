@@ -9,22 +9,21 @@
 #	Modifications:	v0.1; first version.
 #			v0.2; option chunk: percentage of the first image to take.
 #			v0.3; option compose: show whole main scene, then split in half showing both scenes, then show whole secondary scene.
+#                       v0.4; hardcoded binaries removed for which
 #
 #	Future imprv.:	Compose 3 scenes.
 #			Transition from 1st scene to 2nd scene using the separation bar.
 #
 
 #Some variables
-version=0.3
-
-mogrify=/usr/bin/mogrify-im6
-convert=/usr/bin/convert-im6
-identify=/usr/bin/identify-im6
-composite=/usr/bin/composite-im6
+version=0.4
+identify=$(which identify-im6)
+convert=$(which convert-im6)
+composite=$(which composite-im6)
 
 
 #Check if we have all the needed software
-if [[ ! -e "${mogrify}" ]] || [[ ! -e "${convert}" || ! -e "${identify}" ]]; then
+if [[ ! -e "${composite}" ]] || [[ ! -e "${convert}" || ! -e "${identify}" ]]; then
 	echo "You are missing all or parts of imagemagick package, please install it for your distribution"
 	exit 1
 fi

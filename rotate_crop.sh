@@ -9,15 +9,16 @@
 #	Modifications:	v0.1; first version.
 #			v0.2; added option to cut pixels from output.
 #			v0.3; grouped in pairs pxiel cut.
+#                       v0.4; hardcoded binaries removed for which
 #
 #	Future imprv.:
 #
 
 #Some variables
-version=0.3
+version=0.4
+convert=$(which convert-im6)
+identify=$(which identify-im6)
 
-convert=/usr/bin/convert-im6
-identify=/usr/bin/identify-im6
 
 #Check if we have all the needed software
 if [[ ! -e "${convert}" || ! -e "${identify}" ]]; then

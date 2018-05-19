@@ -11,6 +11,7 @@
 #Some variables
 version=0.1
 
+
 function repeat(){
         file=`ls -al ${dir}/ | grep DSC | awk '{ print $9 }' | head -n 1`
         if [[ -z "${file}" ]]; then

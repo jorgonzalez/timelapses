@@ -12,16 +12,18 @@
 #			v0.4; option to break the images in a rectangular grid for control points.
 #			v0.5; option to define and use block processing.
 #			v0.6; option to create a copy of the target directory before aligning.
+#			v0.7; hardcoded binaries removed for which
 #
 #	Future imprv.:	Preview.
 #
 
 #Some variables
-version=0.6
-mogrify=/usr/bin/mogrify-im6
-convert=/usr/bin/convert-im6
-identify=/usr/bin/identify-im6
-align=/usr/bin/align_image_stack
+version=0.7
+mogrify=$(which mogrify-im6)
+convert=$(which convert-im6)
+identify=$(which identify-im6)
+align=$(which align_image_stack)
+
 
 #Check if we have all the needed software
 if [[ ! -e ${mogrify} ]] || [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]]; then
@@ -142,7 +144,7 @@ function usage(){
 	echo -e "\t-p (OPTIONAL) number of control points between images (default 15)"
 	echo -e "\t-g (OPTIONAL) grid, break the image into a rectangular grid (default 1)"
 	echo -e "\t-n (OPTIONAL) do not use first image as base model"
-	echo -e "\t-y {OPTIONAL} copy original into ORIGINAL_aligned"
+	echo -e "\t-y (OPTIONAL) copy original into ORIGINAL_aligned"
         echo -e "\t-v show version number"
         echo -e "\t-h show this help"
         exit 0

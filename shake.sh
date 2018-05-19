@@ -8,14 +8,16 @@
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option for total shakeness.
+#                       v0.3; hardcoded binaries removed for which
 #
 #	Future imprv.:	
 #
 
 #Some variables
-version=0.2
-convert=/usr/bin/convert-im6
-identify=/usr/bin/identify-im6
+version=0.3
+convert=$(which convert-im6)
+identify=$(which identify-im6)
+
 
 #Check if we have all the needed software
 if [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]]; then
@@ -125,7 +127,7 @@ function version(){
 }
 
 function usage(){
-        echo -e "./$(basename $0) -d <VALUE> -z -t -b -s <VALUE> -p"
+        echo -e "\t./$(basename $0) -d <VALUE> -z -t -b -s <VALUE> -p"
         echo -e "\t-d directory where the files are"
         echo -e "\t-z horizontal shake"
 	echo -e "\t-t total shake"

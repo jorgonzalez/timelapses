@@ -9,20 +9,21 @@
 #			Takes the directory to work on as argument.
 #			If there is a second argument, only generates the preview of the output.
 #
-#	Version:	0.3
+#	Version:	0.4
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; rudimentary preview passing a second argument.
 #			v0.3; use optarg
+#                       v0.4; hardcoded binaries removed for which
 #
 #	Future imprv.:	Beter argument check and validation.
 #
 
 #Some variables
-version=0.3
+version=0.4
+convert=$(which convert-im6)
+identify=$(which identify-im6)
 
-convert=/usr/bin/convert-im6
-identify=/usr/bin/identify-im6
 
 function perspective(){
 

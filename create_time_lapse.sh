@@ -27,23 +27,23 @@
 #			v0.15; Tilt-shift using predefined options; quiet output.
 #			v0.16; Input slide/zoom parameters along the options, e.g.: -s ltr2 -z in3.
 #			v0.17; Output the first image of the changes as a test if an option is passed.
-#			v0.18: Option to input frames per second.
-#			v0.19: More verbosed output (timers); variables between brackets.
-#			v0.20: Include cores on Imagemagick processing
-#			v0.21: Option for smoothing hyperlapse, requires ffmpeg2 (ffmpeg with -vf vidstab)
-#			v0.22: Change tint color
-#			v0.23: Deflicker video; fix preview for tint
-#			v0.24: Change levels of white point, black point.
-#			v0.25: Added ugly code for rounidng image proportions when resizing
+#			v0.18; Option to input frames per second.
+#			v0.19; More verbosed output (timers); variables between brackets.
+#			v0.20; Include cores on Imagemagick processing
+#			v0.21; Option for smoothing hyperlapse, requires ffmpeg2 (ffmpeg with -vf vidstab)
+#			v0.22; Change tint color
+#			v0.23; Deflicker video; fix preview for tint
+#			v0.24; Change levels of white point, black point.
+#			v0.25; Added ugly code for rounidng image proportions when resizing
+#                       v0.26; hardcoded binaries removed for which
 #
 #	Future imprv.:	Beter argument check and validation.
 #			Cancel video creation if dimensions exceed certain overlay.
 #			Manual resize of height.
 #
 
-version=0.24
-
 #Some variables
+version=0.26
 #Directory where the video will be written
 OutDir=A_Done
 #Original directory to search for the pictures
@@ -52,9 +52,10 @@ SourceDir=A
 FontFace=URW-Chancery-L-Medium-Italic
 ProcNum=`cat /proc/cpuinfo | grep "cpu cores" | head -n 1 | awk '{print $4}'`
 vectors="transform_vectors.trf"
-mogrify=/usr/bin/mogrify-im6
-convert=/usr/bin/convert-im6
-identify=/usr/bin/identify-im6
+mogrify=$(which mogrify-im6)
+convert=$(which convert-im6)
+identify=$(which identify-im6)
+
 
 #Set the software depending on the Linux Distribution
 if [[ `uname -a | egrep -i "debian|ubuntu" | wc -l` -eq 1 ]]; then

@@ -8,16 +8,18 @@
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option progressive application of the mask; reverse progression of the mask.
-#			v0.4: preview.
+#			v0.3; preview.
+#			v0.4; hardcoded binaries removed for which
 #
 #	Future imprv.:	
 #
 
 #Some variables
-version=0.3
-mogrify=/usr/bin/mogrify-im6
-convert=/usr/bin/convert-im6
-identify=/usr/bin/identify-im6
+version=0.4
+mogrify=$(which mogrify-im6)
+convert=$(which convert-im6)
+identify=$(which identify-im6)
+
 
 #Check if we have all the needed software
 if [[ ! -e ${mogrify} ]] || [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]]; then
@@ -52,7 +54,6 @@ function mask(){
 				let j=${j}+1
 			done
 		fi
-	fi
 	elif [[ "${progressive}" == "y" ]]; then
 		perc=`echo "100/(${total_images}-1)" | bc -l | cut -c -4`
 		j=${total_images}
@@ -115,9 +116,9 @@ function usage(){
         echo -e "./$(basename $0) -d <VALUE> -m <VALUE> -g -r"
         echo -e "\t-d directory where the files are"
 	echo -e "\t-m path to the mask file"
-	echo -e "\t-g OPTIONAL: progressive, will apply mask from 100% transparency to 0%"
-	echo -e "\t-r OPTIONAL: reverse, will apply mask from 0% transparency to 100%"
-	echo -e "\t-p OPTIONAL: (preview) applies the modifications to the first foto to see the result"
+	echo -e "\t-g OPTIONAL progressive, will apply mask from 100% transparency to 0%"
+	echo -e "\t-r OPTIONAL reverse, will apply mask from 0% transparency to 100%"
+	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
         echo -e "\t-v show version number"
         echo -e "\t-h show this help"
         exit 0

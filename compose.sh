@@ -4,20 +4,23 @@
 #
 # 	Description:	Script to make a composition out of a base (static) image and a set of background images.
 #
-#	Version:	0.2
+#	Version:	0.3
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option to reverse background images.
+#			v0.3; preview.
+#                       v0.4; hardcoded binaries removed for which
 #
-#	Future imprv.:	Preview.
+#	Future imprv.:	
 #
 
 #Some variables
-version=0.2
-mogrify=/usr/bin/mogrify-im6
-convert=/usr/bin/convert-im6
-composite=/usr/bin/composite-im6
-identify=/usr/bin/identify-im6
+version=0.4
+mogrify=$(which mogrify-im6)
+convert=$(which convert-im6)
+composite=$(which composite-im6)
+identify=$(which identify-im6)
+
 
 #Check if we have all the needed software
 if [[ ! -e ${mogrify} ]] || [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]] || [[ ! -e ${composite} ]]; then
@@ -65,7 +68,8 @@ function usage(){
         echo -e "\t-s source image (foreground image)"
         echo -e "\t-b directory with the background images"
 	echo -e "\t-d output directory"
-	echo -e "\t-r (OPTIONAL) reverse order of background images"
+	echo -e "\t-r OPTIONAL reverse order of background images"
+	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
         echo -e "\t-v show version number"
         echo -e "\t-h show this help"
         exit 0
@@ -75,7 +79,7 @@ function main(){
         compose
 }
 
-while getopts "s:b:d:rhv?" arg; do
+while getopts "s:b:d:rphv?" arg; do
         case ${arg} in
 		s)source_image=${OPTARG}
 		;;
@@ -84,6 +88,8 @@ while getopts "s:b:d:rhv?" arg; do
 		d)dir=${OPTARG}
 		;;
 		r)reverse=yes
+		;;
+		p)preview=y
 		;;
                 v)version && exit 0
 		;;

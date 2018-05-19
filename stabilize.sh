@@ -14,6 +14,7 @@
 #Some variables
 version=0.1
 
+
 #Set the software depending on the Linux Distribution
 if [[ `uname -a | egrep -i "debian|ubuntu" | wc -l` -eq 1 ]]; then
         mpegTool="/usr/bin/avconv"
