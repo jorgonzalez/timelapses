@@ -15,12 +15,14 @@
 #			v0.2; rudimentary preview passing a second argument.
 #			v0.3; use optarg
 #                       v0.4; hardcoded binaries removed for which
+#			v0.5; allow dots and commas as coordinate separator (easier if using keypad).
+#			v0.6; remove resizing option if there is no crop. Use original size if cropping instead of hardcoded value.
 #
 #	Future imprv.:	Beter argument check and validation.
 #
 
 #Some variables
-version=0.4
+version=0.6
 convert=$(which convert-im6)
 identify=$(which identify-im6)
 
@@ -34,6 +36,12 @@ function perspective(){
 	#D2=231,2038
 	#D2=46,2124
 
+	#Change dots for commas in the entry coordenates
+	A2=`echo ${A2} | tr "." ","`
+	B2=`echo ${B2} | tr "." ","`
+	C2=`echo ${C2} | tr "." ","`
+	D2=`echo ${D2} | tr "." ","`
+
 	#Pixels to cut from the output image
 	Q=0	#X1 From left
 	P=0	#Y1 From up
@@ -45,6 +53,19 @@ function perspective(){
 		exit 1
 	else
 		total_images=`ls -l ${dir} | grep DSC | wc -l`
+
+		file=`ls -al ${dir}/ | grep DSC | awk '{ print $9 }' | head -n 1`
+		if [[ -z "${file}" ]]; then
+                	echo "There are no files to change their perspective!"
+			exit 1
+		else
+			echo "Working on \"${dir}\"..."
+		fi
+
+		width=`${identify} ${dir}/${file} | awk '{ print $3 }' | awk -F"x" '{ print $1 }'`
+		height=`${identify} ${dir}/${file} | awk '{ print $3 }' | awk -F"x" '{ print $2 }'`
+
+
 		j=1
 		if [[ ! -z "${preview}" ]]; then
 			cp ${dir}/DSC_0001.JPG ${dir}/A_preview.JPG
@@ -60,7 +81,9 @@ function perspective(){
 #			Four point transformation
 			${convert} ${dir}/${foto} -filter point -virtual-pixel tile -mattecolor DodgerBlue -distort Perspective "${A1} ${A2}  ${B1} ${B2}  ${C1} ${C2}  ${D1} ${D2}  ${E1} ${E2}" ${dir}/${foto};
 
-			${convert} ${dir}/${foto} -crop +${Q}+${P} -crop -${Z}-${M} ${dir}/${foto}; convert-im6 ${dir}/${foto} -resize '4288x2848!' ${dir}/${foto};
+			if [[ "${Q}" -ne 0 || "${P}" -ne 0 || "${Z}" -ne 0 || "${M}" -ne 0 ]]; then
+				${convert} ${dir}/${foto} -crop +${Q}+${P} -crop -${Z}-${M} ${dir}/${foto}; convert-im6 ${dir}/${foto} -resize ''${width}'x'${height}'!' ${dir}/${foto};
+			fi
 			let j=${j}+1
 			if [[ ! -z "${preview}" ]]; then
 				break
@@ -74,7 +97,7 @@ function usage(){
         echo -e "\t./$(basename $0) -d <VALUE> -A <VALUE> -B <VALUE> -C <VALUE> -D <VALUE>"
         echo -e "\t-d directory where the files are"
 	echo -e "\t-A -B -C -D pairs of coordinates to be mapped from (A1=600,1000;B1=600,2500;C1=3600,2500;D1=3600,1000)"
-        echo -e "\t-p OPTIONAL: (preview) applies the modifications to the first foto to see the result"
+        echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
         echo -e "\t-v show version number"
         echo -e "\t-h show this help"
         exit 0
