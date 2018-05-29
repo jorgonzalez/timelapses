@@ -24,6 +24,10 @@ convert=$(which convert-im6)
 identify=$(which identify-im6)
 align=$(which align_image_stack)
 
+#Some default values
+block=3
+points=40
+grid=1
 
 #Check if we have all the needed software
 if [[ ! -e ${mogrify} ]] || [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]]; then
@@ -66,16 +70,6 @@ function align_images(){
 	fi
 
 	if [[ -d "${dir}" ]]; then
-		if [[ -z "${block}" ]]; then
-			block=10
-		fi
-		if [[ -z "${points}" ]]; then
-			points=15
-		fi
-		if [[ -z "${grid}" ]]; then
-			grid=1
-		fi
-
 		cd ${dir}
 		file=`ls -al | grep DSC | awk '{ print $9 }' | head -n 1`
 		width=`${identify} ${file} | awk '{ print $3 }' | awk -F"x" '{ print $1 }'`
@@ -138,16 +132,16 @@ function version(){
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -d <VALUE>"
-        echo -e "\t-d directory where the files are"
-        echo -e "\t-b (OPTIONAL) block number of images to process (default 10)"
-	echo -e "\t-p (OPTIONAL) number of control points between images (default 15)"
-	echo -e "\t-g (OPTIONAL) grid, break the image into a rectangular grid (default 1)"
+	echo -e "\t./$(basename $0) -d <VALUE>"
+	echo -e "\t-d directory where the files are"
+	echo -e "\t-b (OPTIONAL) block number of images to process (default ${block})"
+	echo -e "\t-p (OPTIONAL) number of control points between images (default ${points})"
+	echo -e "\t-g (OPTIONAL) grid, break the image into a rectangular grid (default ${grid})"
 	echo -e "\t-n (OPTIONAL) do not use first image as base model"
 	echo -e "\t-y (OPTIONAL) copy original into ORIGINAL_aligned"
-        echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t-v show version number"
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){
