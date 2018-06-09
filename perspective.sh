@@ -29,10 +29,10 @@ identify=$(which identify-im6)
 
 function perspective(){
 
-	A1=600,1000
-	B1=600,2500
-	C1=3600,2500
-	D1=3600,1000
+	A1="600,1000"
+	B1="600,2500"
+	C1="3600,2500"
+	D1="3600,1000"
 	#D2=231,2038
 	#D2=46,2124
 
@@ -47,7 +47,6 @@ function perspective(){
 	P=0	#Y1 From up
 	Z=0	#X2 From right
 	M=0	#Yw From down
-
 
 	if [[ -z "${dir}" ]]; then
 		exit 1
@@ -66,6 +65,20 @@ function perspective(){
 		height=`${identify} ${dir}/${file} | awk '{ print $3 }' | awk -F"x" '{ print $2 }'`
 
 
+		if [[ "${force}" == "y" ]]; then
+			let height=${width}*9/16
+
+			A2="600,1078"
+			B2="600,2342"
+			C2="3600,2342"
+			D2="3600,1078"
+
+			Q=0
+			P=235
+			Z=0
+			M=235
+		fi
+
 		j=1
 		if [[ ! -z "${preview}" ]]; then
 			cp ${dir}/DSC_0001.JPG ${dir}/A_preview.JPG
@@ -77,13 +90,14 @@ function perspective(){
 
 #			Five point transformation
 #			${convert} ${dir}/${foto} -filter point -virtual-pixel tile -mattecolor DodgerBlue -distort Perspective "${A1} ${A2}  ${B1} ${B2}  ${C1} ${C2}  ${D1} ${D2}" ${dir}/${foto};
-#
+
 #			Four point transformation
 			${convert} ${dir}/${foto} -filter point -virtual-pixel tile -mattecolor DodgerBlue -distort Perspective "${A1} ${A2}  ${B1} ${B2}  ${C1} ${C2}  ${D1} ${D2}  ${E1} ${E2}" ${dir}/${foto};
 
 			if [[ "${Q}" -ne 0 || "${P}" -ne 0 || "${Z}" -ne 0 || "${M}" -ne 0 ]]; then
 				${convert} ${dir}/${foto} -crop +${Q}+${P} -crop -${Z}-${M} ${dir}/${foto}; convert-im6 ${dir}/${foto} -resize ''${width}'x'${height}'!' ${dir}/${foto};
 			fi
+
 			let j=${j}+1
 			if [[ ! -z "${preview}" ]]; then
 				break
@@ -98,6 +112,7 @@ function usage(){
         echo -e "\t-d directory where the files are"
 	echo -e "\t-A -B -C -D pairs of coordinates to be mapped from (A1=600,1000;B1=600,2500;C1=3600,2500;D1=3600,1000)"
         echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
+	echo -e "\t-f OPTIONAL force 16:9 perspective"
         echo -e "\t-v show version number"
         echo -e "\t-h show this help"
         exit 0
@@ -107,7 +122,7 @@ function main(){
         perspective
 }
 
-while getopts "d:A:B:C:D:phv?" arg; do
+while getopts "d:A:B:C:D:fphv?" arg; do
         case $arg in
                 d)dir=${OPTARG}
                 ;;
@@ -121,6 +136,8 @@ while getopts "d:A:B:C:D:phv?" arg; do
 		;;
 		p)preview=y
                 ;;
+		f)force=y
+		;;
                 v)version && exit 0
                 ;;
                 ?)usage && exit 1
