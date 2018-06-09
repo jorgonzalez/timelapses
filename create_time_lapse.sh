@@ -30,7 +30,7 @@
 #			v0.18; Option to input frames per second.
 #			v0.19; More verbosed output (timers); variables between brackets.
 #			v0.20; Include cores on Imagemagick processing
-#			v0.21; Option for smoothing hyperlapse, requires ffmpeg2 (ffmpeg with -vf vidstab)
+#			v0.21; Option for smoothing hyperlapse, requires ffmpeg2 (ffmpeg with -vf vidstab) https://launchpad.net/~mc3man/+archive/ubuntu/ffmpeg-test
 #			v0.22; Change tint color
 #			v0.23; Deflicker video; fix preview for tint
 #			v0.24; Change levels of white point, black point.
@@ -55,22 +55,13 @@ vectors="transform_vectors.trf"
 mogrify=$(which mogrify-im6)
 convert=$(which convert-im6)
 identify=$(which identify-im6)
+mpegTool="/usr/bin/ffmpeg"
+mpegTool2="/usr/bin/ffmpeg2"
 
-
-#Set the software depending on the Linux Distribution
-if [[ `uname -a | egrep -i "debian|ubuntu" | wc -l` -eq 1 ]]; then
-	mpegTool="/usr/bin/avconv"
-	mpegTool2="/usr/bin/ffmpeg2"
-	gimp="/usr/bin/gimp"
-elif [[ `uname -a | egrep -i "redhat|fedora|centos" | wc -l` -eq 1 ]]; then
-	mpegTool="/usr/bin/ffmpeg"
-	mpegTool2="/usr/bin/ffmpeg2"
-	gimp="/usr/bin/gimp"
-fi
 
 #Check if we have all the needed software
 if [[ ! -e ${mpegTool} ]]; then
-	echo "You are missing ${mpegTool}, please install libav-tools for your distribution"
+	echo "You are missing ${mpegTool}, please install ffmpeg/libav-tools for your distribution"
 	exit 1
 elif [[ ! -e ${mpegTool2} ]]; then
 	echo "You are missing ${mpegTool2}, please install ffmpeg-static libfdk-aac1 libopenjpeg5 libvidstab1.0 libx265 transcode"
@@ -81,8 +72,6 @@ elif [[ ! -e '/usr/bin/mencoder' ]]; then
 elif [[ ! -e ${mogrify} ]] || [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]]; then
 	echo "You are missing all or parts of imagemagick package, please install it for your distribution"
 	exit 1
-elif [[ ! -e '/usr/bin/gimp' ]]; then
-	echo "You are missing gimp, please install it for your distribution"
 fi
 
 function timestamp(){
@@ -100,13 +89,13 @@ function timestamp(){
 }
 
 function create_video(){
-	if [[ "${directories}" == "y" ]]; then
+	if [[ "${recurisve}" == "y" ]]; then
 		for dir in `ls -ald ${SourceDir}/* | awk '{ print $9 }'`; do
 			dir=`pwd`/${dir}
 			create_timelapse ${dir}
 		done
 	else
-		dir=`pwd`/${SourceDir}
+		dir=`pwd`/${directory}
 		create_timelapse ${dir}
 	fi
 }
@@ -505,7 +494,11 @@ function create_timelapse(){
 		if [[ "${hyperlapse}" == "y" ]]; then
 			echo -e "\nSmoothing hyperlapse..."
 			timestamp17=`date +%s`
-			finaloutfile_hyperlapse=${outdir}'/hyperlapse_'${outname}'_'${quality}'_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
+			if [[ "${fps}" -ne 25 ]]; then
+				finaloutfile_hyperlapse=${outdir}'/hyperlapse_'${outname}'_'${quality}'_'${fps}'fps_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
+			else
+				finaloutfile_hyperlapse=${outdir}'/hyperlapse_'${outname}'_'${quality}'_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
+			fi
 			rm ${vectors}  2>/dev/null
 			ffmpeg2 -v 0 -i ${finaloutfile} -vf vidstabdetect=stepsize=6:shakiness=8:accuracy=9:result=${vectors} -f null -
 			ffmpeg2 -v 0 -i ${finaloutfile} -vf vidstabtransform=input=${vectors}:zoom=1:smoothing=30,unsharp=5:5:0.8:3:3:0.4 -vcodec libx264 -preset slow -tune film -crf 18 ${finaloutfile_hyperlapse}
@@ -542,7 +535,8 @@ function usage(){
 	echo -e "\t./$(basename $0) -r <VALUE> -f <VALUE> -d -a <VALUE> -m -e <VALUE> -b <VALUE> -n -f <VALUE> -c <VALUE> -l <VALUE> -t <TEXT> -z <VALUE>"
 	echo -e "\t-r OPTIONAL (resize) the value of the new width; new height will be in proportion (e.g.: 2560, 2048, 1920, 1600, 1440, 1280, 1024...)"
 	echo -e "\t-f OPTIONAL (fade) the number of frames for the fade-in and fade-out"
-	echo -e "\t-d OPTIONAL (directories) recursively crawl through the directories to create videos"
+	echo -e "\t-d OPTIONAL (directory) to execute this script"
+	echo -e "\t-u OPTIONAL (recursive) recursively crawl through the directories to create videos"
 	echo -e "\t-a OPTIONAL frames per second (default is 25)"
 	echo -e "\t-m OPTIONAL (monochrome) grayscale video output"
 	echo -e "\t-e OPTIONAL (enhance) modify image contrast stretching the range of intensity by black point white point percentage, e.g. <1x2%>"
@@ -577,13 +571,15 @@ function main(){
 	create_video
 }
 
-while getopts "r:f:a:dmie:b:w:nc:l:t:z:s:ypkxhv?" arg; do
+while getopts "r:f:a:ud:mie:b:w:nc:l:t:z:s:ypkxhv?" arg; do
 	case ${arg} in
 	        r)new_width=${OPTARG}
 	        ;;
 	        f)fade=${OPTARG}
 	        ;;
-		d)directories=y
+		d)directory=${OPTARG}
+		;;
+		u)recursive=y
 		;;
 		a)fps=${OPTARG}
 		;;
