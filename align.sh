@@ -134,11 +134,11 @@ function version(){
 function usage(){
 	echo -e "\t./$(basename $0) -d <VALUE>"
 	echo -e "\t-d directory where the files are"
-	echo -e "\t-b (OPTIONAL) block number of images to process (default ${block})"
-	echo -e "\t-p (OPTIONAL) number of control points between images (default ${points})"
-	echo -e "\t-g (OPTIONAL) grid, break the image into a rectangular grid (default ${grid})"
-	echo -e "\t-n (OPTIONAL) do not use first image as base model"
-	echo -e "\t-y (OPTIONAL) copy original into ORIGINAL_aligned"
+	echo -e "\t-b OPTIONAL block number of images to process (default ${block})"
+	echo -e "\t-p OPTIONAL number of control points between images (default ${points})"
+	echo -e "\t-g OPTIONAL grid, break the image into a rectangular grid (default ${grid})"
+	echo -e "\t-n OPTIONAL do not use first image as base model"
+	echo -e "\t-y OPTIONAL copy original into ORIGINAL_aligned"
 	echo -e "\t-v show version number"
 	echo -e "\t-h show this help"
 	exit 0
