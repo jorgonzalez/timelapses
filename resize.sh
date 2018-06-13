@@ -41,7 +41,7 @@ function perspective(){
 
 		if [[ ! -z ${copy} ]]; then
 			orig_dir_end=`echo ${dir} | rev | cut -b 1-1`
-			suffix="${width}x${heigth}"
+			suffix="${width}x${height}"
 			if [[ "${orig_dir_end}" == / ]]; then
 				dir=`echo ${dir} | rev | cut -b 2- | rev`
 			fi
