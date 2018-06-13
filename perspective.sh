@@ -85,17 +85,17 @@ function perspective(){
 		else
 			rm ${dir}/A_preview.JPG 2>/dev/null
 		fi
-		for foto in `ls -l ${dir} | grep JPG | awk '{print $9}'`; do
+		for photo in `ls -l ${dir} | grep JPG | awk '{print $9}'`; do
 			echo -e -n "\rModifying image ${j}/${total_images}"
 
 #			Five point transformation
-#			${convert} ${dir}/${foto} -filter point -virtual-pixel tile -mattecolor DodgerBlue -distort Perspective "${A1} ${A2}  ${B1} ${B2}  ${C1} ${C2}  ${D1} ${D2}" ${dir}/${foto};
+#			${convert} ${dir}/${photo} -filter point -virtual-pixel tile -mattecolor DodgerBlue -distort Perspective "${A1} ${A2}  ${B1} ${B2}  ${C1} ${C2}  ${D1} ${D2}" ${dir}/${photo};
 
 #			Four point transformation
-			${convert} ${dir}/${foto} -filter point -virtual-pixel tile -mattecolor DodgerBlue -distort Perspective "${A1} ${A2}  ${B1} ${B2}  ${C1} ${C2}  ${D1} ${D2}  ${E1} ${E2}" ${dir}/${foto};
+			${convert} ${dir}/${photo} -filter point -virtual-pixel tile -mattecolor DodgerBlue -distort Perspective "${A1} ${A2}  ${B1} ${B2}  ${C1} ${C2}  ${D1} ${D2}  ${E1} ${E2}" ${dir}/${photo};
 
 			if [[ "${Q}" -ne 0 || "${P}" -ne 0 || "${Z}" -ne 0 || "${M}" -ne 0 ]]; then
-				${convert} ${dir}/${foto} -crop +${Q}+${P} -crop -${Z}-${M} ${dir}/${foto}; convert-im6 ${dir}/${foto} -resize ''${width}'x'${height}'!' ${dir}/${foto};
+				${convert} ${dir}/${photo} -crop +${Q}+${P} -crop -${Z}-${M} ${dir}/${photo}; convert-im6 ${dir}/${photo} -resize ''${width}'x'${height}'!' ${dir}/${photo};
 			fi
 
 			let j=${j}+1
@@ -111,7 +111,7 @@ function usage(){
         echo -e "\t./$(basename $0) -d <VALUE> -A <VALUE> -B <VALUE> -C <VALUE> -D <VALUE>"
         echo -e "\t-d directory where the files are"
 	echo -e "\t-A -B -C -D pairs of coordinates to be mapped from (A1=600,1000;B1=600,2500;C1=3600,2500;D1=3600,1000)"
-        echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
+        echo -e "\t-p OPTIONAL (preview) applies the modifications to the first photo to see the result"
 	echo -e "\t-f OPTIONAL force 16:9 perspective"
         echo -e "\t-v show version number"
         echo -e "\t-h show this help"
