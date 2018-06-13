@@ -60,13 +60,14 @@ function convert_images(){
 function align_images(){
 	if [[ ! -z ${copy} ]]; then
 		orig_dir_end=`echo ${dir} | rev | cut -b 1-1`
+		suffix="aligned"
 		if [[ "${orig_dir_end}" == / ]]; then
 			dir=`echo ${dir} | rev | cut -b 2- | rev`
 		fi
-		rm -rf ${dir}_aligned
-		echo "Copying ${dir}/ to ${dir}_aligned/..."
-		cp -a ${dir} ${dir}_aligned
-		dir="${dir}_aligned"
+		rm -rf ${dir}_${suffix}
+		echo "Copying ${dir}/ to ${dir}_${suffix}/..."
+		cp -a ${dir} ${dir}_${suffix}
+		dir="${dir}_${suffix}"
 	fi
 
 	if [[ -d "${dir}" ]]; then

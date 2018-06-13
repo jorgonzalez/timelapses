@@ -41,13 +41,14 @@ function perspective(){
 
 		if [[ ! -z ${copy} ]]; then
 			orig_dir_end=`echo ${dir} | rev | cut -b 1-1`
+			suffix="${width}x${heigth}"
 			if [[ "${orig_dir_end}" == / ]]; then
 				dir=`echo ${dir} | rev | cut -b 2- | rev`
 			fi
-			rm -rf ${dir}_${width}
-			echo "Copying ${dir}/ to ${dir}_${width}/..."
-			cp -a ${dir} ${dir}_${width}
-			dir="${dir}_${width}"
+			rm -rf ${dir}_${suffix}
+			echo "Copying ${dir}/ to ${dir}_${suffix}/..."
+			cp -a ${dir} ${dir}_${suffix}
+			dir="${dir}_${suffix}"
 		fi
 
 		j=1
@@ -77,7 +78,7 @@ function usage(){
         echo -e "\t-d directory where the files are"
 	echo -e "\t-w new width of the image"
 	echo -e "\t-h new height of the image"
-        echo -e "\t-y OPTIONAL copy original into ORIGINAL_NEW-WIDTH"
+        echo -e "\t-y OPTIONAL copy original into ORIGINAL_NEW-WIDTHxNEW-HEIGHT"
         echo -e "\t-p OPTIONAL (preview) applies the modifications to the first photo to see the result"
         echo -e "\t-v show version number"
         echo -e "\t-h show this help"
