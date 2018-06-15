@@ -4,7 +4,7 @@
 #
 # 	Description:	Script to apply a mask to a set of pictures in an directory.
 #
-#	Version:	0.3
+#	Version:	0.4
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option progressive application of the mask; reverse progression of the mask.
@@ -113,7 +113,7 @@ function version(){
 }
 
 function usage(){
-        echo -e "./$(basename $0) -d <VALUE> -m <VALUE> -g -r"
+        echo -e "\t./$(basename $0) -d <VALUE> -m <VALUE> -g -r"
         echo -e "\t-d directory where the files are"
 	echo -e "\t-m path to the mask file"
 	echo -e "\t-g OPTIONAL progressive, will apply mask from 100% transparency to 0%"
@@ -129,7 +129,7 @@ function main(){
 }
 
 while getopts "d:m:prghv?" arg; do
-        case ${arg} in
+	case ${arg} in
 		d)dir=${OPTARG}
 		;;
 		m)mask=${OPTARG}
@@ -140,11 +140,11 @@ while getopts "d:m:prghv?" arg; do
 		;;
 		p)preview=y
 		;;
-                v)version && exit 0
+		v)version && exit 0
 		;;
-                ?)usage && exit 1
-                ;;
-            esac
+		?)usage && exit 1
+		;;
+	esac
 done
 
 main
