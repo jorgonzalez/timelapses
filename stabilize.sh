@@ -13,16 +13,8 @@
 
 #Some variables
 version=0.1
-
-
-#Set the software depending on the Linux Distribution
-if [[ `uname -a | egrep -i "debian|ubuntu" | wc -l` -eq 1 ]]; then
-        mpegTool="/usr/bin/avconv"
-        mpegTool2="/usr/bin/ffmpeg2"
-elif [[ `uname -a | egrep -i "redhat|fedora|centos" | wc -l` -eq 1 ]]; then
-        mpegTool="/usr/bin/ffmpeg"
-        mpegTool2="/usr/bin/ffmpeg2"
-fi
+mpegTool="/usr/bin/ffmpeg"
+mpegTool2="/usr/bin/ffmpeg2"
 
 #Check if we have all the needed software
 if [[ ! -e ${mpegTool} ]]; then
