@@ -61,6 +61,31 @@ is ascendant (e.g. 0001-0100).
 			(by histogram), and fade in-out. 
 			Requires imagemagick, ffmpeg and mencoder.
 
+```
+	./create_time_lapse.sh -r <VALUE> -f <VALUE> -d -a <VALUE> -m -e <VALUE> -b <VALUE> -n -f <VALUE> -c <VALUE> -l <VALUE> -t <TEXT> -z <VALUE>
+	-r OPTIONAL (resize) the value of the new width; new height will be in proportion (e.g.: 2560, 2048, 1920, 1600, 1440, 1280, 1024...)
+	-f OPTIONAL (fade) the number of frames for the fade-in and fade-out
+	-d OPTIONAL (directory) to execute this script
+	-u OPTIONAL (recursive) recursively crawl through the directories to create videos
+	-a OPTIONAL frames per second (default is 25)
+	-m OPTIONAL (monochrome) grayscale video output
+	-e OPTIONAL (enhance) modify image contrast stretching the range of intensity by black point white point percentage, e.g. <1x2%>
+	-b OPTIONAL (brightness) modify the brightness-contrast in images by brightness contrast percentage, e.g. <0x3%>
+	-w OPTIONAL (levels) modify the levels stretching the range of intensity by black point white point percentage, e.g. <0,90%>
+	-n OPTIONAL (normalize) increase the image contrast stretching the range of intensity
+	-c OPTIONAL (tint) use a color to tint the image; valid tints 'red', 'green' and 'blue' (requires tint value option -l <-200:200>)
+	-t OPTIONAL (text) print a text in each picture (after applying the rest of the changes if any)
+	-z OPTIONAL (zoom) zoom into an area with step; areas and step supported: <in1-5>, <out1-5>
+	-s OPTIONAL (slide) move the focus -with step- of the images from <ltr1-2> to right, <rtl1-2> to left, <utd1-2> to down, <dtu1-2> to up
+	-i OPTIONAL (tilt-shift) tilt-shift the images (very time consuming)
+	-y OPTIONAL (hyperlapse) smooth the output of the hyperlapse
+	-p OPTIONAL (preview) applies the modifications to the first photo to see the result
+	-k OPTIONAL (kill output) no video output, just picture modification
+	-x OPTIONAL Deflicker video
+	-v show version number
+	-h show this help
+```
+
 ## deflicker.sh
 	Description:	Script to deflicker a video.
 
