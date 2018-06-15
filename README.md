@@ -35,7 +35,8 @@ All scripts expect the names of the photos begin with DSC and that the sorting i
 	Description:	Script to play a directory of images.
 
 ## repeat.sh
-	Description:    Script to generate a given number of files out of a given directory and the number of wanted images.
+	Description:    Script to generate a given number of files out of a given directory and the number of wanted 
+			images.
 
 ## resize.sh
 	Description:	Script to resize batches of images given a directory and a new width and height.
