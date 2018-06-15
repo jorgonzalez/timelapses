@@ -4,7 +4,7 @@
 #
 # 	Description:	Script to make a composition out of a base (static) image and a set of background images.
 #
-#	Version:	0.3
+#	Version:	0.4
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option to reverse background images.
