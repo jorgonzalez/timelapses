@@ -185,6 +185,8 @@ is ascendant (e.g. 0001-0100).
 	-o output directory
 	-b OPTIONAL number of separating bars (default 16)
 	-a OPTIONAL frames per bar (default is 4)
+	-f OPTIONAL (fade) fade in or fade out (default in)
+	-t OPTIONAL direction of the bars ltr or rtl (default left-to-right)
 	-e OPTIONAL apply transparency to the bars
 	-v show version number
 	-h show this help
