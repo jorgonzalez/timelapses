@@ -8,7 +8,7 @@
 #			contrast, normalize the contrast in the pictures (by histogram), and fade in-out.
 #			Requires imagemagick, ffmpeg and mencoder.
 #
-#	Version:	0.25
+#	Version:	0.27
 #
 #	Modifications:	v0.1; fade in-out feature.
 #			v0.2; crawl through directories in the output directory.
@@ -34,8 +34,9 @@
 #			v0.22; Change tint color
 #			v0.23; Deflicker video; fix preview for tint
 #			v0.24; Change levels of white point, black point.
-#			v0.25; Added ugly code for rounidng image proportions when resizing
-#                       v0.26; hardcoded binaries removed for which
+#			v0.25; Added ugly code for rounidng image proportions when resizing.
+#                       v0.26; hardcoded binaries removed for which.
+#			v0.27; meconder and ffmpeg2 binary substituted for which.
 #
 #	Future imprv.:	Beter argument check and validation.
 #			Cancel video creation if dimensions exceed certain overlay.
@@ -43,7 +44,7 @@
 #
 
 #Some variables
-version=0.26
+version=0.27
 #Directory where the video will be written
 OutDir=A_Done
 #Original directory to search for the pictures
@@ -55,6 +56,7 @@ vectors="transform_vectors.trf"
 mogrify=$(which mogrify-im6)
 convert=$(which convert-im6)
 identify=$(which identify-im6)
+mencoderBin=$(which mencoder)
 mpegTool="/usr/bin/ffmpeg"
 mpegTool2="/usr/bin/ffmpeg2"
 
@@ -66,7 +68,7 @@ if [[ ! -e ${mpegTool} ]]; then
 elif [[ ! -e ${mpegTool2} ]]; then
 	echo "You are missing ${mpegTool2}, please install ffmpeg-static libfdk-aac1 libopenjpeg5 libvidstab1.0 libx265 transcode"
 	exit 1
-elif [[ ! -e '/usr/bin/mencoder' ]]; then
+elif [[ ! -e ${mencoderBin} ]]; then
 	echo "You are missing mencoder, please install it for your distribution"
 	exit 1
 elif [[ ! -e ${mogrify} ]] || [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]]; then
@@ -164,8 +166,6 @@ function create_timelapse(){
 			j=1
 			for i in `ls -al ${dir} | grep JPG | awk '{ print $9 }'`; do
 				echo -e -n "\rSliding left-to-right image ${j}/${total_images}"
-#				convert ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${step}+${height_index} ${dir}/"${i}"_tmp.JPG
-#				convert ${cnv_ops} ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${step}+${height_index} ${dir}/"${i}"_tmp.JPG
 				${convert} ${cnv_ops} ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${step}+${height_index} ${dir}/"${i}"_tmp.JPG
 				mv ${dir}/"${i}"_tmp.JPG ${dir}/${i}
 
@@ -183,8 +183,6 @@ function create_timelapse(){
 			j=1
 			for i in `ls -al ${dir} | grep JPG | awk '{ print $9 }'`; do
 				echo -e -n "\rSliding right-to-left image ${j}/${total_images}"
-#				convert ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${step}+${height_index} ${dir}/"${i}"_tmp.JPG
-#				convert ${cnv_ops} ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${step}+${height_index} ${dir}/"${i}"_tmp.JPG
 				${convert} ${cnv_ops} ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${step}+${height_index} ${dir}/"${i}"_tmp.JPG
 				mv ${dir}/"${i}"_tmp.JPG ${dir}/${i}
 
@@ -202,8 +200,6 @@ function create_timelapse(){
 			j=1
 			for i in `ls -al ${dir} | grep JPG | awk '{ print $9 }'`; do
 				echo -e -n "\rSliding up-to-down image ${j}/${total_images}"
-#				convert ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${width_index}+$step ${dir}/"${i}"_tmp.JPG
-#				convert ${cnv_ops} ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${width_index}+$step ${dir}/"${i}"_tmp.JPG
 				${convert} ${cnv_ops} ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${width_index}+$step ${dir}/"${i}"_tmp.JPG
 				mv ${dir}/"${i}"_tmp.JPG ${dir}/${i}
 
@@ -221,8 +217,6 @@ function create_timelapse(){
 			j=1
 			for i in `ls -al ${dir} | grep JPG | awk '{ print $9 }'`; do
 				echo -e -n "\rSliding down-to-up image ${j}/${total_images}"
-#				convert ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${width_index}+$step ${dir}/"${i}"_tmp.JPG
-#				convert ${cnv_ops} ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${width_index}+$step ${dir}/"${i}"_tmp.JPG
 				${convert} ${cnv_ops} ${dir}/${i} -crop "${new_width_s}"x"${new_height}"+${width_index}+$step ${dir}/"${i}"_tmp.JPG
 				mv ${dir}/"${i}"_tmp.JPG ${dir}/${i}
 
@@ -277,12 +271,6 @@ function create_timelapse(){
 
 	#Enhacance tinted color options
 	if [[ ! -z "${tint_color}" ]]; then
-#		j=1
-#		for i in `ls -al ${dir} | grep DSC | awk '{ print $9 }'`; do
-#			echo -e -n "\rTinting image ${j}/${total_images}"
-#			${mogrify} ${dir}/${i} -fill ${tint_color} -tint ${tint_value} ${dir}/${i}
-#			let j=${j}+1
-#		done
 		mod_ops="${mod_ops} -fill ${tint_color} -tint ${tint_value}"
 	fi
 
@@ -302,6 +290,12 @@ function create_timelapse(){
 			zoom_increase=`echo "scale=4;0.001*${zoom_increase}" | bc`
 			zoom_type=`echo ${zoom} | tr -d 0-9`
 
+			if [[ "${reverse}" == "yes" && "${zoom_type}" == "in" ]]; then
+				zoom_type="out"
+			elif [[ "${reverse}" == "yes" && "${zoom_type}" == "out" ]]; then
+				zoom_type="in"
+			fi
+
 			if [[ "${zoom_type}" == "in" ]]; then
 				#timestamp
 				timestamp5=`date +%s`
@@ -310,7 +304,6 @@ function create_timelapse(){
 				j=1
 				for i in `ls -al ${dir} | grep DSC | awk '{ print $9 }'`; do
 					echo -e -n "\rZooming in image ${j}/${total_images}"
-#					mogrify ${mod_ops} -distort SRT ${zoom_factor},0 ${dir}/${i}
 					${mogrify} ${mod_ops} -distort SRT ${zoom_factor},0 ${dir}/${i}
 					zoom_factor=`echo "scale=4;${zoom_factor}+${zoom_increase}" | bc`
 					let j=${j}+1
@@ -329,7 +322,6 @@ function create_timelapse(){
 				j=1
 				for i in `ls -al ${dir} | grep DSC | awk '{ print $9 }'`; do
 					echo -e -n "\rZooming out image ${j}/${total_images}"
-#					mogrify ${mod_ops} -distort SRT ${zoom_factor},0 ${dir}/${i}
 					${mogrify} ${mod_ops} -distort SRT ${zoom_factor},0 ${dir}/${i}
 					zoom_factor=`echo "scale=4;${zoom_factor}-${zoom_increase}" | bc`
 					let j=${j}+1
@@ -350,7 +342,6 @@ function create_timelapse(){
 			j=1
 			for i in `ls -al ${dir} | grep DSC | awk '{ print $9 }'`; do
 				echo -e -n "\rModifying image ${j}/${total_images}"
-#				mogrify ${mod_ops} ${dir}/${i}
 				${mogrify} ${mod_ops} ${dir}/${i}
 				let j=${j}+1
 			done
@@ -359,7 +350,6 @@ function create_timelapse(){
 			timestamp ${timestamp9} ${timestamp10} "\nTotal modifications"
 
 		elif [[ ! -z "${mod_ops}" && ! -z "${preview}" ]]; then
-#			mogrify ${mod_ops} ${dir}/${preview}
 			${mogrify} ${mod_ops} ${dir}/${preview}
 		fi
 
@@ -442,7 +432,7 @@ function create_timelapse(){
 		#timestamp
 		timestamp15=`date +%s`
 		echo -n "Encoding..."
-		mencoder -nosound -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell:autoaspect:vqscale=3 -vf scale=${width}:${height} -mf type=jpeg:fps=${fps} mf://${dir}/*.JPG -o ${outfile} -really-quiet 2>/dev/null
+		${mencoderBin} -nosound -ovc lavc -lavcopts vcodec=mpeg4:mbd=2:trell:autoaspect:vqscale=3 -vf scale=${width}:${height} -mf type=jpeg:fps=${fps} mf://${dir}/*.JPG -o ${outfile} -really-quiet 2>/dev/null
 
 		if [[ ! -z "${fade}" ]]; then
 			frames=`ls -al ${dir}/ | grep DSC | wc -l`
@@ -456,7 +446,7 @@ function create_timelapse(){
 
 		if [[ "${momochrome}" == "y" ]]; then
 			echo "Converting to grayscale..."
-				mencoder ${outfile} -o ${outfile}"_bw" -vf hue=0:0 -oac copy -ovc lavc -really-quiet
+				${mencoderBin} ${outfile} -o ${outfile}"_bw" -vf hue=0:0 -oac copy -ovc lavc -really-quiet
 				mv ${outfile}"_bw" ${outfile}
 		fi
 
@@ -500,8 +490,8 @@ function create_timelapse(){
 				finaloutfile_hyperlapse=${outdir}'/hyperlapse_'${outname}'_'${quality}'_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
 			fi
 			rm ${vectors}  2>/dev/null
-			ffmpeg2 -v 0 -i ${finaloutfile} -vf vidstabdetect=stepsize=6:shakiness=8:accuracy=9:result=${vectors} -f null -
-			ffmpeg2 -v 0 -i ${finaloutfile} -vf vidstabtransform=input=${vectors}:zoom=1:smoothing=30,unsharp=5:5:0.8:3:3:0.4 -vcodec libx264 -preset slow -tune film -crf 18 ${finaloutfile_hyperlapse}
+			${mpegTool2} -v 0 -i ${finaloutfile} -vf vidstabdetect=stepsize=6:shakiness=8:accuracy=9:result=${vectors} -f null -
+			${mpegTool2} -v 0 -i ${finaloutfile} -vf vidstabtransform=input=${vectors}:zoom=1:smoothing=30,unsharp=5:5:0.8:3:3:0.4 -vcodec libx264 -preset slow -tune film -crf 18 ${finaloutfile_hyperlapse}
 			rm ${vectors} ${finaloutfile} 2>/dev/null
 			timestamp18=`date +%s`
 			timestamp ${timestamp17} ${timestamp18} "Smoothing hyperlapse"
@@ -515,7 +505,7 @@ function create_timelapse(){
 			timestamp19=`date +%s`
 			VIDEO_BITRATE=`mplayer -vo null -ao null -identify -frames 0 ${finaloutfile} 2>/dev/null | grep ID_VIDEO_BITRATE | awk -F"=" '{print $2}'`
 			finaloutfile_deflickered=${outdir}'/timelapse_'${outname}'_deflickered_'${quality}'_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
-			mencoder ${finaloutfile} -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=15000000:abitrate=48 -oac copy -vf hqdn3d -o ${finaloutfile_deflickered}
+			${mencoderBin} ${finaloutfile} -ovc lavc -lavcopts vcodec=mpeg4:vbitrate=15000000:abitrate=48 -oac copy -vf hqdn3d -o ${finaloutfile_deflickered}
 			timestamp20=`date +%s`
 			timestamp ${timestamp19} ${timestamp20}
 		fi
@@ -571,7 +561,7 @@ function main(){
 	create_video
 }
 
-while getopts "r:f:a:ud:mie:b:w:nc:l:t:z:s:ypkxhv?" arg; do
+while getopts "r:f:a:ud:mie:b:w:nc:l:t:z:s:R:ypkxhv?" arg; do
 	case ${arg} in
 	        r)new_width=${OPTARG}
 	        ;;

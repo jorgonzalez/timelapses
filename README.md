@@ -4,7 +4,7 @@ All scripts expect the names of the photos begin with DSC and that the sorting
 is ascendant (e.g. 0001-0100).
 
 ## add_mask_transparency.sh
-	Description:	Script to apply a mask to a set of pictures in an
+	Description:	Script to apply a mask to a set of pictures in a
 			directory.
 ```
 	./add_mask_transparency.sh -d <VALUE> -m <VALUE> -g -r
