@@ -4,11 +4,11 @@
 #
 # 	Description:	Script to compose a batch of images using two directories as source.
 #
-#	Version:	0.3
+#	Version:	0.4
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option chunk: percentage of the first image to take.
-#			v0.3; option compose: show whole main scene, then split in half showing both scenes, then show whole secondary scene.
+#			v0.3; option compose: show whole main scene, then split in half showing both scenes, then show whole second scene.
 #                       v0.4; hardcoded binaries removed for which
 #
 #	Future imprv.:	Compose 3 scenes.
@@ -44,19 +44,19 @@ function split(){
 		let bar=${width_main}*2/100
 	fi
 
-	file_secondary=`ls -al ${secondary}/ | grep DSC | awk '{ print $9 }' | head -n 1`
-	if [[ -z "${file_secondary}" ]]; then
-		echo "There are no files to process at ${secondary}"
+	file_second=`ls -al ${second}/ | grep DSC | awk '{ print $9 }' | head -n 1`
+	if [[ -z "${file_second}" ]]; then
+		echo "There are no files to process at ${second}"
 		exit 1
 	fi
-	total_images_secondary=`ls -l ${main} | grep DSC | wc -l`
-#	width_secondary=`${identify} ${main}/${file_secondary} | awk '{ print $3 }' | awk -F"x" '{ print $1 }'`
-#	height_secondary=`${identify} ${main}/${file_secodnary} | awk '{ print $3 }' | awk -F"x" '{ print $2 }'`
+	total_images_second=`ls -l ${main} | grep DSC | wc -l`
+#	width_second=`${identify} ${main}/${file_second} | awk '{ print $3 }' | awk -F"x" '{ print $1 }'`
+#	height_second=`${identify} ${main}/${file_secodnary} | awk '{ print $3 }' | awk -F"x" '{ print $2 }'`
 
-	if [[ "${total_images_main}" -ge "${total_images_secondary}" ]]; then
+	if [[ "${total_images_main}" -ge "${total_images_second}" ]]; then
 		total_images=${total_images_main}
 	else
-		total_images=${total_images_secondary}
+		total_images=${total_images_second}
 	fi
 
 	#create the output directory
@@ -79,12 +79,12 @@ function split(){
 			${convert} ${main}/${i} -fill ${color} -stroke ${color} -draw "rectangle 0,0 ${first_rectangle_pos},${height_frame}" -draw "rectangle ${second_rectangle_pos},0 ${width_frame},${height_frame}" ${output}/${i}.m.PNG
 			${convert} ${output}/${i}.m.PNG -transparent ${color} ${output}/main.PNG
 			${convert} -page -${first_rectangle_pos}+0 ${output}/main.PNG -background none -flatten ${output}/main.PNG
-			${convert} ${secondary}/${i} -fill ${color} -stroke ${color} -draw "rectangle 0,0 ${third_rectangle_pos},${height_frame}" -draw "rectangle ${fourth_rectangle_pos},0 ${width_frame},${height_frame}" ${output}/${i}.s.PNG
-			${convert} ${output}/${i}.s.PNG -transparent ${color} ${output}/secondary.PNG
-			${convert} -page +${third_rectangle_pos}+0 ${output}/secondary.PNG -background none -flatten ${output}/secondary.PNG
-			${composite} -compose plus ${output}/main.PNG ${output}/secondary.PNG ${output}/final.PNG
+			${convert} ${second}/${i} -fill ${color} -stroke ${color} -draw "rectangle 0,0 ${third_rectangle_pos},${height_frame}" -draw "rectangle ${fourth_rectangle_pos},0 ${width_frame},${height_frame}" ${output}/${i}.s.PNG
+			${convert} ${output}/${i}.s.PNG -transparent ${color} ${output}/second.PNG
+			${convert} -page +${third_rectangle_pos}+0 ${output}/second.PNG -background none -flatten ${output}/second.PNG
+			${composite} -compose plus ${output}/main.PNG ${output}/second.PNG ${output}/final.PNG
 			${convert} ${output}/final.PNG -fill none -stroke black -strokewidth ${bar} -draw "line ${bar_pos},0 ${bar_pos},${width_frame}" ${output}/${i}
-			rm ${output}/${i}.m.PNG ${output}/${i}.s.PNG ${output}/main.PNG ${output}/secondary.PNG ${output}/final.PNG
+			rm ${output}/${i}.m.PNG ${output}/${i}.s.PNG ${output}/main.PNG ${output}/second.PNG ${output}/final.PNG
 			if [[ "$preview" == "y" ]]; then
 				exit 0
 			fi
@@ -105,13 +105,13 @@ function split(){
 			elif [[ "${j}" -gt "${third}" && "${j}" -le "${two_thirds}" ]]; then
 				${convert} ${main}/${i} -fill ${color} -stroke ${color} -draw "rectangle ${bar_pos},0 ${width_frame},${height_frame}" ${output}/${i}.m.PNG
 				${convert} ${output}/${i}.m.PNG -transparent ${color} ${output}/main.PNG
-				${convert} ${secondary}/${i} -fill ${color} -stroke ${color} -draw "rectangle 0,0 ${bar_pos},${height_frame}" ${output}/${i}.s.PNG
-				${convert} ${output}/${i}.s.PNG -transparent ${color} ${output}/secondary.PNG
-				${composite} -compose plus ${output}/main.PNG ${output}/secondary.PNG ${output}/final.PNG
+				${convert} ${second}/${i} -fill ${color} -stroke ${color} -draw "rectangle 0,0 ${bar_pos},${height_frame}" ${output}/${i}.s.PNG
+				${convert} ${output}/${i}.s.PNG -transparent ${color} ${output}/second.PNG
+				${composite} -compose plus ${output}/main.PNG ${output}/second.PNG ${output}/final.PNG
 				${convert} ${output}/final.PNG -fill none -stroke black -strokewidth ${bar} -draw "line ${bar_pos},0 ${bar_pos},${width_frame}" ${output}/${i}
-				rm ${output}/${i}.m.PNG ${output}/${i}.s.PNG ${output}/main.PNG ${output}/secondary.PNG ${output}/final.PNG
+				rm ${output}/${i}.m.PNG ${output}/${i}.s.PNG ${output}/main.PNG ${output}/second.PNG ${output}/final.PNG
 			else
-				cp ${secondary}/${i} ${output}/${i}
+				cp ${second}/${i} ${output}/${i}
 			fi
 			let j=${j}+1
 		done
@@ -120,7 +120,7 @@ function split(){
 }
 
 function check_args(){
-	if [[ -z "${chunk}" || -z "${output}" || -z "${main}" || -z "${secondary}" ]]; then
+	if [[ -z "${chunk}" || -z "${output}" || -z "${main}" || -z "${second}" ]]; then
 		echo "ERROR: some arguments are empty!"
 		exit 1
 	fi
@@ -133,13 +133,13 @@ function version(){
 }
 
 function usage(){
-	echo -e "\t./$(basename $0) -m <VALUE> -s <VALUE> -b <VALUE> -t <VALUE> -o <VALUE>"
+	echo -e "\t./$(basename $0) -m <VALUE> -s <VALUE> -c <VALUE> -o <VALUE>"
 	echo -e "\t-m directory where the files for the main scene are"
-	echo -e "\t-s directory where the files for the secondary scene are"
-	echo -e "\t-b pixels of the separation bar"
+	echo -e "\t-s directory where the files for the second scene are"
 	echo -e "\t-c chunk, percentage of the first image to take"
 	echo -e "\t-o output directory"
-	echo -e "\t-e OPTIONAL compose: show whole main scene, then split in half showing both scenes, then show whole secondary scene"
+	echo -e "\t-b OPTIONAL pixels of the separation bar"
+	echo -e "\t-e OPTIONAL (compose) show whole main scene, then split in half showing both scenes, then show whole second scene"
 	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
 	echo -e "\t-v show version number"
 	echo -e "\t-h show this help"
@@ -155,7 +155,7 @@ while getopts "m:s:bc:o:ephv?" arg; do
 	case $arg in
 		m)main=${OPTARG}
 		;;
-		s)secondary=${OPTARG}
+		s)second=${OPTARG}
 		;;
 		b)bar=${OPTARG}
 		;;

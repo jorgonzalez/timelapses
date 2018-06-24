@@ -197,13 +197,13 @@ is ascendant (e.g. 0001-0100).
 			directories as source.
 
 ```
-	./split.sh -m <VALUE> -s <VALUE> -b <VALUE> -t <VALUE> -o <VALUE>
+	./split.sh -m <VALUE> -s <VALUE> -c <VALUE> -o <VALUE>
 	-m directory where the files for the main scene are
-	-s directory where the files for the secondary scene are
-	-b pixels of the separation bar
+	-s directory where the files for the second scene are
 	-c chunk, percentage of the first image to take
 	-o output directory
-	-e OPTIONAL compose: show whole main scene, then split in half showing both scenes, then show whole secondary scene
+	-b OPTIONAL pixels of the separation bar
+	-e OPTIONAL (compose) show whole main scene, then split in half showing both scenes, then show whole second scene
 	-p OPTIONAL (preview) applies the modifications to the first foto to see the result
 	-v show version number
 	-h show this help
