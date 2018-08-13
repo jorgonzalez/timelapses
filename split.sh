@@ -49,7 +49,7 @@ function split(){
 		echo "There are no files to process at ${second}"
 		exit 1
 	fi
-	total_images_second=`ls -l ${main} | grep DSC | wc -l`
+	total_images_second=`ls -l ${second} | grep DSC | wc -l`
 #	width_second=`${identify} ${main}/${file_second} | awk '{ print $3 }' | awk -F"x" '{ print $1 }'`
 #	height_second=`${identify} ${main}/${file_secodnary} | awk '{ print $3 }' | awk -F"x" '{ print $2 }'`
 
@@ -99,7 +99,7 @@ function split(){
 		let two_thirds=${third}*2
 
 		for i in `ls -al ${main} | grep JPG | awk '{ print $9 }'`; do
-                        echo -e -n "\rModifying image ${j}/${total_images}"
+			echo -e -n "\rModifying image ${j}/${total_images}"
 			if [[ "${j}" -le "${third}" ]]; then
 				cp ${main}/${i} ${output}/${i}
 			elif [[ "${j}" -gt "${third}" && "${j}" -le "${two_thirds}" ]]; then
