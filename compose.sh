@@ -9,7 +9,7 @@
 #	Modifications:	v0.1; first version.
 #			v0.2; option to reverse background images.
 #			v0.3; preview.
-#                       v0.4; hardcoded binaries removed for which
+#			v0.4; hardcoded binaries removed for which
 #
 #	Future imprv.:	
 #
@@ -24,8 +24,8 @@ identify=$(which identify-im6)
 
 #Check if we have all the needed software
 if [[ ! -e ${mogrify} ]] || [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]] || [[ ! -e ${composite} ]]; then
-        echo "You are missing all or parts of imagemagick package, please install it for your distribution"
-        exit 1
+	echo "You are missing all or parts of imagemagick package, please install it for your distribution"
+	exit 1
 fi
 
 function translate(){
@@ -58,21 +58,21 @@ function compose(){
 }
 
 function version(){
-        name=$(basename $0)
-        echo -e "${name}: version ${version}"
-        exit 0
+	name=$(basename $0)
+	echo -e "${name}: version ${version}"
+	exit 0
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -d <VALUE>"
-        echo -e "\t-s source image (foreground image)"
-        echo -e "\t-b directory with the background images"
+	echo -e "\t./$(basename $0) -d <VALUE>"
+	echo -e "\t-s source image (foreground image)"
+	echo -e "\t-b directory with the background images"
 	echo -e "\t-d output directory"
 	echo -e "\t-r OPTIONAL reverse order of background images"
 	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
-        echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t-v show version number"
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){
@@ -80,7 +80,7 @@ function main(){
 }
 
 while getopts "s:b:d:rphv?" arg; do
-        case ${arg} in
+	case ${arg} in
 		s)source_image=${OPTARG}
 		;;
 		b)background_dir=${OPTARG}
@@ -91,11 +91,11 @@ while getopts "s:b:d:rphv?" arg; do
 		;;
 		p)preview=y
 		;;
-                v)version && exit 0
+		v)version && exit 0
 		;;
-                ?)usage && exit 1
-                ;;
-            esac
+		?)usage && exit 1
+		;;
+	esac
 done
 
 main

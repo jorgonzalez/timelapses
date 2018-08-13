@@ -19,10 +19,9 @@ mogrify=$(which mogrify-im6)
 
 #Check if we have all the needed software
 if [[ ! -e ${mogrify} ]]; then
-        echo "You are missing all or parts of imagemagick package, please install it for your distribution"
-        exit 1
+	echo "You are missing all or parts of imagemagick package, please install it for your distribution"
+	exit 1
 fi
-
 
 function perspective(){
 
@@ -74,19 +73,19 @@ function perspective(){
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -d <VALUE> -w <VALUE> -e <VALUE>"
-        echo -e "\t-d directory where the files are"
+	echo -e "\t./$(basename $0) -d <VALUE> -w <VALUE> -e <VALUE>"
+	echo -e "\t-d directory where the files are"
 	echo -e "\t-w new width of the image"
 	echo -e "\t-e new height of the image"
-        echo -e "\t-y OPTIONAL copy original into ORIGINAL_NEW-WIDTHxNEW-HEIGHT"
-        echo -e "\t-p OPTIONAL (preview) applies the modifications to the first photo to see the result"
-        echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t-y OPTIONAL copy original into ORIGINAL_NEW-WIDTHxNEW-HEIGHT"
+	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first photo to see the result"
+	echo -e "\t-v show version number"
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){
-        perspective
+	perspective
 }
 
 while getopts "d:e:w:yphv?" arg; do

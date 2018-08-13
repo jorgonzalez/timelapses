@@ -7,7 +7,7 @@
 #	Version:	0.2
 #
 #	Modifications:	v0.1; first version.
-#                       v0.2; hardcoded binaries removed for which
+#			v0.2; hardcoded binaries removed for which
 #
 #	Future imprv.:	Beter argument check and validation.
 #			Proper option function.
@@ -23,9 +23,8 @@ DIR=${1}
 
 #Check if we have all the needed software
 if [[ ! -e ${mplayer} ]]; then
-        echo "You are missing ${mplayer}, please install it for your distribution"
-        exit 1
+	echo "You are missing ${mplayer}, please install it for your distribution"
+	exit 1
 fi
 
 mplayer mf://${DIR}/*.JPG -mf fps=25
-

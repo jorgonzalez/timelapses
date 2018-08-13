@@ -14,7 +14,7 @@
 #	Modifications:	v0.1; first version.
 #			v0.2; rudimentary preview passing a second argument.
 #			v0.3; use optarg
-#                       v0.4; hardcoded binaries removed for which
+#			v0.4; hardcoded binaries removed for which
 #			v0.5; allow dots and commas as coordinate separator (easier if using keypad).
 #			v0.6; remove resizing option if there is no crop. Use original size if cropping instead of hardcoded value.
 #
@@ -108,41 +108,41 @@ function perspective(){
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -d <VALUE> -A <VALUE> -B <VALUE> -C <VALUE> -D <VALUE>"
-        echo -e "\t-d directory where the files are"
+	echo -e "\t./$(basename $0) -d <VALUE> -A <VALUE> -B <VALUE> -C <VALUE> -D <VALUE>"
+	echo -e "\t-d directory where the files are"
 	echo -e "\t-A -B -C -D pairs of coordinates to be mapped from (A1=600,1000;B1=600,2500;C1=3600,2500;D1=3600,1000)"
-        echo -e "\t-p OPTIONAL (preview) applies the modifications to the first photo to see the result"
+	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first photo to see the result"
 	echo -e "\t-f OPTIONAL force 16:9 perspective"
-        echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t-v show version number"
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){
-        perspective
+	perspective
 }
 
 while getopts "d:A:B:C:D:fphv?" arg; do
-        case $arg in
-                d)dir=${OPTARG}
-                ;;
-                A)A2=${OPTARG}
-                ;;
-                B)B2=${OPTARG}
-                ;;
-                C)C2=${OPTARG}
-                ;;
-                D)D2=${OPTARG}
+	case $arg in
+		d)dir=${OPTARG}
+		;;
+		A)A2=${OPTARG}
+		;;
+		B)B2=${OPTARG}
+		;;
+		C)C2=${OPTARG}
+		;;
+		D)D2=${OPTARG}
 		;;
 		p)preview=y
-                ;;
+		;;
 		f)force=y
 		;;
-                v)version && exit 0
-                ;;
-                ?)usage && exit 1
-                ;;
-            esac
+		v)version && exit 0
+		;;
+		?)usage && exit 1
+		;;
+	esac
 done
 
 main

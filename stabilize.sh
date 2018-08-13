@@ -18,11 +18,11 @@ mpegTool2="/usr/bin/ffmpeg2"
 
 #Check if we have all the needed software
 if [[ ! -e ${mpegTool} ]]; then
-        echo "You are missing ${mpegTool}, please install libav-tools for your distribution"
-        exit 1
+	echo "You are missing ${mpegTool}, please install libav-tools for your distribution"
+	exit 1
 elif [[ ! -e ${mpegTool2} ]]; then
-        echo "You are missing ${mpegTool2}, please install ffmpeg-static libfdk-aac1 libopenjpeg5 libvidstab1.0 libx265 transcode"
-        exit 1
+	echo "You are missing ${mpegTool2}, please install ffmpeg-static libfdk-aac1 libopenjpeg5 libvidstab1.0 libx265 transcode"
+	exit 1
 fi
 
 function stabilize(){
@@ -44,17 +44,17 @@ function stabilize(){
 }
 
 function version(){
-        name=$(basename $0)
-        echo -e "${name}: version $version"
-        exit 0
+	name=$(basename $0)
+	echo -e "${name}: version $version"
+	exit 0
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -s <VALUE>"
-        echo -e "\t-s source video to stabilize"
-        echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t./$(basename $0) -s <VALUE>"
+	echo -e "\t-s source video to stabilize"
+	echo -e "\t-v show version number"
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){
@@ -62,14 +62,14 @@ function main(){
 }
 
 while getopts "s:hv?" arg; do
-        case ${arg} in
+	case ${arg} in
 		s)source_video=${OPTARG}
 		;;
-                v)version && exit 0
+		v)version && exit 0
 		;;
-                ?)usage && exit 1
-                ;;
-            esac
+		?)usage && exit 1
+		;;
+	esac
 done
 
 main

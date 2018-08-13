@@ -8,7 +8,7 @@
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option for total shakeness.
-#                       v0.3; hardcoded binaries removed for which
+#			v0.3; hardcoded binaries removed for which
 #
 #	Future imprv.:	
 #
@@ -21,8 +21,8 @@ identify=$(which identify-im6)
 
 #Check if we have all the needed software
 if [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]]; then
-        echo "You are missing all or parts of imagemagick package, please install it for your distribution"
-        exit 1
+	echo "You are missing all or parts of imagemagick package, please install it for your distribution"
+	exit 1
 fi
 
 function stillness(){
@@ -108,58 +108,58 @@ function shake(){
 }
 
 function check_args(){
-        if [[ -z "${dir}" ]]; then
+	if [[ -z "${dir}" ]]; then
 		echo "ERROR: directory is empty!"
 		exit 1
 	elif [[ ! -z "${total}" && ! -z "${horizontal}" ]]; then
-                echo "ERROR: you're using horizontal and total shake at the same time!"
-                exit 1
+		echo "ERROR: you're using horizontal and total shake at the same time!"
+		exit 1
 	elif [[ -z "${total}" && -z "${horizontal}" ]]; then
 		echo "ERROR: use either horizontal (-z) or total (-t) shake!"
 		exit 1
-        fi
+	fi
 }
 
 function version(){
-        name=$(basename $0)
-        echo -e "${name}: version ${version}"
-        exit 0
+	name=$(basename $0)
+	echo -e "${name}: version ${version}"
+	exit 0
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -d <VALUE> -z -t -b -s <VALUE> -p"
-        echo -e "\t-d directory where the files are"
-        echo -e "\t-z horizontal shake"
+	echo -e "\t./$(basename $0) -d <VALUE> -z -t -b -s <VALUE> -p"
+	echo -e "\t-d directory where the files are"
+	echo -e "\t-z horizontal shake"
 	echo -e "\t-t total shake"
 	echo -e "\t-s OPTIONAL: shakeness percentage"
-        echo -e "\t-p OPTIONAL: preview"
-        echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t-p OPTIONAL: preview"
+	echo -e "\t-v show version number"
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){
-#        check_args
+#	check_args
 	shake
 }
 
 while getopts "d:zts:phv?" arg; do
-        case ${arg} in
-                d)dir=${OPTARG}
-                ;;
-                z)horizontal=yes
-                ;;
+	case ${arg} in
+		d)dir=${OPTARG}
+		;;
+		z)horizontal=yes
+		;;
 		b)total=yes
-                ;;
+		;;
 		s)shakeness=${OPTARG}
 		;;
-                p)preview=y
-                ;;
-                v)version && exit 0
-                ;;
-                ?)usage && exit 1
-                ;;
-            esac
+		p)preview=y
+		;;
+		v)version && exit 0
+		;;
+		?)usage && exit 1
+		;;
+	esac
 done
 
 main

@@ -27,8 +27,8 @@ direction="ltr"
 
 #Check if we have all the needed software
 if [[ ! -e "${composite}" ]] || [[ ! -e "${convert}" || ! -e "${identify}" ]]; then
-        echo "You are missing all or parts of imagemagick package, please install it for your distribution"
-        exit 1
+	echo "You are missing all or parts of imagemagick package, please install it for your distribution"
+	exit 1
 fi
 
 function merge_bars(){
@@ -173,9 +173,9 @@ function slide_bars(){
 }
 
 function version(){
-        name=$(basename $0)
-        echo -e "${name}: version ${version}"
-        exit 0
+	name=$(basename $0)
+	echo -e "${name}: version ${version}"
+	exit 0
 }
 
 function check_args(){
@@ -190,7 +190,7 @@ function check_args(){
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -d <VALUE> -o <VALUE> -b <VALUE> -a <VALUE> -f <VALUE> -t <VALUE> -r <VALUE>"
+	echo -e "\t./$(basename $0) -d <VALUE> -o <VALUE> -b <VALUE> -a <VALUE> -f <VALUE> -t <VALUE> -r <VALUE>"
 	echo -e "\t-d directory where the files are"
 	echo -e "\t-o output directory"
 	echo -e "\t-b OPTIONAL number of separating bars (default ${bar_number})"
@@ -200,8 +200,8 @@ function usage(){
 	echo -e "\t-e OPTIONAL apply transparency to the bars"
 #	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
 	echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){

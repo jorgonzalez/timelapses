@@ -13,11 +13,11 @@ version=0.1
 
 
 function repeat(){
-        file=`ls -al ${dir}/ | grep DSC | awk '{ print $9 }' | head -n 1`
-        if [[ -z "${file}" ]]; then
-                echo "There are no files to repeat!"
-                exit 1
-        fi
+	file=`ls -al ${dir}/ | grep DSC | awk '{ print $9 }' | head -n 1`
+	if [[ -z "${file}" ]]; then
+		echo "There are no files to repeat!"
+		exit 1
+	fi
 
 	total_images=`ls -l ${dir} | grep DSC | wc -l`
 
@@ -36,35 +36,35 @@ function repeat(){
 }
 
 function version(){
-        name=$(basename $0)
-        echo -e "${name}: version ${version}"
-        exit 0
+	name=$(basename $0)
+	echo -e "${name}: version ${version}"
+	exit 0
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -d <VALUE> -n <VALUE>"
-        echo -e "\t-d directory where the files are"
-        echo -e "\t-n number of pictures to end up with"
-        echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t./$(basename $0) -d <VALUE> -n <VALUE>"
+	echo -e "\t-d directory where the files are"
+	echo -e "\t-n number of pictures to end up with"
+	echo -e "\t-v show version number"
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){
-        repeat
+	repeat
 }
 
 while getopts "d:n:hv?" arg; do
-        case $arg in
+	case $arg in
 		d)dir=${OPTARG}
 		;;
-                n)npictures=${OPTARG}
-                ;;
-                v)version && exit 0
+		n)npictures=${OPTARG}
 		;;
-                ?)usage && exit 1
-                ;;
-            esac
+		v)version && exit 0
+		;;
+		?)usage && exit 1
+		;;
+	esac
 done
 
 main

@@ -35,7 +35,7 @@
 #			v0.23; Deflicker video; fix preview for tint
 #			v0.24; Change levels of white point, black point.
 #			v0.25; Added ugly code for rounidng image proportions when resizing.
-#                       v0.26; hardcoded binaries removed for which.
+#			v0.26; hardcoded binaries removed for which.
 #			v0.27; meconder and ffmpeg2 binary substituted for which.
 #
 #	Future imprv.:	Beter argument check and validation.
@@ -563,10 +563,10 @@ function main(){
 
 while getopts "r:f:a:ud:mie:b:w:nc:l:t:z:s:R:ypkxhv?" arg; do
 	case ${arg} in
-	        r)new_width=${OPTARG}
-	        ;;
-	        f)fade=${OPTARG}
-	        ;;
+		r)new_width=${OPTARG}
+		;;
+		f)fade=${OPTARG}
+		;;
 		d)directory=${OPTARG}
 		;;
 		u)recursive=y
@@ -599,17 +599,17 @@ while getopts "r:f:a:ud:mie:b:w:nc:l:t:z:s:R:ypkxhv?" arg; do
 		;;
 		x)deflicker=y
 		;;
-	        p)preview=y
+		p)preview=y
 		;;
 		k)killoutput=y
-	        ;;
-	        v)version && exit 0
-	        ;;
-	        h|\?)usage && exit 0
-	        ;;
-	        ?)usage && exit 1
-	        ;;
-	    esac
+		;;
+		v)version && exit 0
+		;;
+		h|\?)usage && exit 0
+		;;
+		?)usage && exit 1
+		;;
+	esac
 done
 
 main

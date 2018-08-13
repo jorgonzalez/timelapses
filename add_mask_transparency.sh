@@ -28,7 +28,7 @@ if [[ ! -e ${mogrify} ]] || [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]]; the
 fi
 
 function check_files(){
-        file=`ls -al ${dir}/ | grep DSC | awk '{ print $9 }' | head -n 1`
+	file=`ls -al ${dir}/ | grep DSC | awk '{ print $9 }' | head -n 1`
 	if [[ -z "${file}" ]]; then
 		echo "There are no files to apply the mask"
 			exit 1
@@ -113,15 +113,15 @@ function version(){
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -d <VALUE> -m <VALUE> -g -r"
-        echo -e "\t-d directory where the files are"
+	echo -e "\t./$(basename $0) -d <VALUE> -m <VALUE> -g -r"
+	echo -e "\t-d directory where the files are"
 	echo -e "\t-m path to the mask file"
 	echo -e "\t-g OPTIONAL progressive, will apply mask from 100% transparency to 0%"
 	echo -e "\t-r OPTIONAL reverse, will apply mask from 0% transparency to 100%"
 	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
-        echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t-v show version number"
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){

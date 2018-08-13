@@ -31,8 +31,8 @@ grid=1
 
 #Check if we have all the needed software
 if [[ ! -e ${mogrify} ]] || [[ ! -e ${convert} ]] || [[ ! -e ${identify} ]]; then
-        echo "You are missing all or parts of imagemagick package, please install it for your distribution"
-        exit 1
+	echo "You are missing all or parts of imagemagick package, please install it for your distribution"
+	exit 1
 fi
 if [[ ! -e ${align} ]]; then
 	echo "You are missing align_image_stack, part of hugin in debian/ubuntu; please install ir for your distribution"
@@ -150,7 +150,7 @@ function main(){
 }
 
 while getopts "d:b:p:g:nyhv?" arg; do
-        case ${arg} in
+	case ${arg} in
 		d)dir=${OPTARG}
 		;;
 		b)block=${OPTARG}
@@ -163,11 +163,11 @@ while getopts "d:b:p:g:nyhv?" arg; do
 		;;
 		y)copy=y
 		;;
-                v)version && exit 0
+		v)version && exit 0
 		;;
-                ?)usage && exit 1
-                ;;
-            esac
+		?)usage && exit 1
+		;;
+	esac
 done
 
 main

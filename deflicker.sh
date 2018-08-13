@@ -7,7 +7,7 @@
 #	Version:	0.1
 #
 #	Modifications:	v0.1; first version.
-#                       v0.2; hardcoded binaries removed for which
+#			v0.2; hardcoded binaries removed for which
 #
 #	Future imprv.:	Preview.
 #
@@ -20,12 +20,12 @@ mplayer=$(which mplayer)
 
 #Check if we have all the needed software
 if [[ ! -e ${mencoder} ]]; then
-        echo "You are missing ${mencoder}, please install it for your distribution"
-        exit 1
+	echo "You are missing ${mencoder}, please install it for your distribution"
+	exit 1
 fi
 if [[ ! -e ${mplayer} ]]; then
-        echo "You are missing ${mplayer}, please install it for your distribution"
-        exit 1
+	echo "You are missing ${mplayer}, please install it for your distribution"
+	exit 1
 fi
 
 function deflicker(){
@@ -44,17 +44,17 @@ function deflicker(){
 }
 
 function version(){
-        name=$(basename $0)
-        echo -e "${name}: version ${version}"
-        exit 0
+	name=$(basename $0)
+	echo -e "${name}: version ${version}"
+	exit 0
 }
 
 function usage(){
-        echo -e "\t./$(basename $0) -s <VALUE>"
-        echo -e "\t-s source video to deflicker"
-        echo -e "\t-v show version number"
-        echo -e "\t-h show this help"
-        exit 0
+	echo -e "\t./$(basename $0) -s <VALUE>"
+	echo -e "\t-s source video to deflicker"
+	echo -e "\t-v show version number"
+	echo -e "\t-h show this help"
+	exit 0
 }
 
 function main(){
@@ -62,14 +62,14 @@ function main(){
 }
 
 while getopts "s:hv?" arg; do
-        case ${arg} in
+	case ${arg} in
 		s)source_video=${OPTARG}
 		;;
-                v)version && exit 0
+		v)version && exit 0
 		;;
-                ?)usage && exit 1
-                ;;
-            esac
+		?)usage && exit 1
+		;;
+	esac
 done
 
 main
