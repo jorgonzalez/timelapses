@@ -3,6 +3,21 @@ Scripts to help processing batches of images for timelapse photography.
 All scripts expect the names of the photos begin with DSC and that the sorting
 is ascendant (e.g. 0001-0100).
 
+## 3scenes.sh
+	Description:	Script to compose a batch of images using three 
+			directories as a source.
+```
+	./3scenes.sh -m <VALUE> -s <VALUE> -t <VALUE> -b <VALUE> -w <VALUE> -o <VALUE>
+	-m directory where the files for the main scene are
+	-s directory where the files for the second scene are
+	-t directory where the files for the third scene are
+	-w width of the main scene (in percentage)
+	-o output directory
+	-b OPTIONAL pixels of the separation bar
+	-v show version number
+	-h show this help
+```
+
 ## add_mask_transparency.sh
 	Description:	Script to apply a mask to a set of pictures in a
 			directory.
