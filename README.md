@@ -65,6 +65,20 @@ is ascendant (e.g. 0001-0100).
 	-h show this help
 
 ```
+## courtain.sh
+	
+	Description:	Script to do a courtain transition between two sets of images.
+```
+	./courtain.sh -m <VALUE> -s <VALUE> -b <VALUE> -o <VALUE>
+	-m directory where the files for the main scene are
+	-s directory where the files for the second scene are
+	-t transition betwen scenes (in frames; default 10)
+	-b OPTIONAL width (in pixels) of the separation bar
+	-o output directory
+	-v show version number
+	-h show this help
+
+```
 
 ## create_time_lapse.sh
 	Description:	Script to create a video out of pictures. It can resize
