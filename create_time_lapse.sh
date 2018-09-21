@@ -472,11 +472,8 @@ function create_timelapse(){
 		else
 			quality="shit"
 		fi
-		if [[ "${fps}" -ne 25 ]]; then
-			finaloutfile='timelapse_'${outname}'_'${quality}'_'${fps}'fps_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
-		else
-			finaloutfile='timelapse_'${outname}'_'${quality}'_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
-		fi
+
+		finaloutfile='timelapse_'${outname}'_'${quality}'_'${fps}'fps_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
 		finaloutfile=${outdir}/${finaloutfile}
 		mv ${outfile} ${finaloutfile}
 
@@ -484,11 +481,7 @@ function create_timelapse(){
 		if [[ "${hyperlapse}" == "y" ]]; then
 			echo -e "\nSmoothing hyperlapse..."
 			timestamp17=`date +%s`
-			if [[ "${fps}" -ne 25 ]]; then
-				finaloutfile_hyperlapse=${outdir}'/hyperlapse_'${outname}'_'${quality}'_'${fps}'fps_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
-			else
-				finaloutfile_hyperlapse=${outdir}'/hyperlapse_'${outname}'_'${quality}'_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
-			fi
+			finaloutfile_hyperlapse=${outdir}'/hyperlapse_'${outname}'_'${quality}'_'${fps}'fps_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
 			rm ${vectors}  2>/dev/null
 			${mpegTool2} -v 0 -i ${finaloutfile} -vf vidstabdetect=stepsize=6:shakiness=8:accuracy=9:result=${vectors} -f null -
 			${mpegTool2} -v 0 -i ${finaloutfile} -vf vidstabtransform=input=${vectors}:zoom=1:smoothing=30,unsharp=5:5:0.8:3:3:0.4 -vcodec libx264 -preset slow -tune film -crf 18 ${finaloutfile_hyperlapse}
