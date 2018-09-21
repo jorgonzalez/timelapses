@@ -4,22 +4,25 @@
 #
 # 	Description:	Script to do a courtain transition between two sets of images.
 #
-#	Version:	0.1
+#	Version:	0.2
 #
 #	Modifications:	v0.1; first version.
-#
+#			v0.2; right-to-left.
 #	Future imprv.:	Preview.
-#			RTL, UTD, DTU.
+#			UTD, DTU.
 #			Image size verification between folders.
+#			Separation bar.
+#
 
 #Some variables
-version=0.1
+version=0.2
 identify=$(which identify-im6)
 convert=$(which convert-im6)
 composite=$(which composite-im6)
 mogrify=$(which mogrify-im6)
 bar=0
 transition_images=10
+direction="ltr"
 
 #Check if we have all the needed software
 if [[ ! -e "${composite}" ]] || [[ ! -e "${convert}" || ! -e "${identify}" ]]; then
@@ -59,7 +62,12 @@ function courtain(){
 
 	#copy as many images as needed, from main to output, to leave only those to work on
 	photonum=1
-	bar_pos_n=1
+	image_helper=1
+	if [[ "${direction}" == "ltr" ]]; then
+		bar_pos_n=1
+	else
+		bar_pos_n=${transition_images}
+	fi
 	let main_photos_to_copy=${total_images_main}-${transition_images}
 	for image in `ls -al ${main} | grep JPG | awk '{ print $9 }'`; do
 		if [[ ${photonum} -lt ${main_photos_to_copy} ]]; then
@@ -71,27 +79,49 @@ function courtain(){
 			${convert} -size ${width_frame}x${height_frame} xc:none ${output}/BASE.PNG
 
 			#calculate where the bar goes
-			bar_pos=`echo "scale=0; (${width_frame}/${transition_images})*${bar_pos_n}" | bc`
+			if [[ "${direction}" == "ltr" ]]; then
+				bar_pos=`echo "scale=0; (${width_frame}/${transition_images})*${bar_pos_n}" | bc`
 
-			#add the chunk of main
-			let pos_x=${width_frame}-${bar_pos}
-			${convert} ${main}/${image} -crop ${pos_x}x${height_frame}+${bar_pos}+0 ${output}/main.PNG
+				#add the chunk of main
+				let pos_x=${width_frame}-${bar_pos}
+				${convert} ${main}/${image} -crop ${pos_x}x${height_frame}+${bar_pos}+0 ${output}/main.PNG
 
-			#add the chunk of second folder
-			${convert} ${second}/DSC_$(printf "%04d" ${bar_pos_n}).JPG -crop ${bar_pos}x${height_frame}+0+0 ${output}/second.PNG
+				#add the chunk of second folder
+				${convert} ${second}/DSC_$(printf "%04d" ${image_helper}).JPG -crop ${bar_pos}x${height_frame}+0+0 ${output}/second.PNG
 
-			#print the separating bar, if any
-			#${convert} ${output}/BASE.PNG -fill ${color} -stroke ${color} -draw "rectangle 0,${vert_bar_pos_1} ${horiz_bar_pos_2},${vert_bar_pos_2}" -draw "rectangle ${horiz_bar_pos_1},0 ${horiz_bar_pos_2},${height_frame}" ${output}/BASE.PNG
+				#print the separating bar, if any
+				#${convert} ${output}/BASE.PNG -fill ${color} -stroke ${color} -draw "rectangle 0,${vert_bar_pos_1} ${horiz_bar_pos_2},${vert_bar_pos_2}" -draw "rectangle ${horiz_bar_pos_1},0 ${horiz_bar_pos_2},${height_frame}" ${output}/BASE.PNG
 
-			#stitch the images
-			${composite} -geometry +0+0 ${output}/second.PNG ${output}/BASE.PNG ${output}/BASE1.PNG
-			${composite} -geometry +${bar_pos}+0 ${output}/main.PNG ${output}/BASE1.PNG ${output}/${image}
-	
-			let bar_pos_n=${bar_pos_n}+1
+				#stitch the images
+				${composite} -geometry +0+0 ${output}/second.PNG ${output}/BASE.PNG ${output}/BASE1.PNG
+				${composite} -geometry +${bar_pos}+0 ${output}/main.PNG ${output}/BASE1.PNG ${output}/${image}
 
-sleep 2
+				let bar_pos_n=${bar_pos_n}+1
+			else
+				### SOMETHING HERE
+				bar_pos=`echo "scale=0; (${width_frame}/${transition_images})*${bar_pos_n}" | bc`
+
+				let bar_pos=${width_frame}-${bar_pos}
+
+				#add the chunk of main
+				let pos_x=${width_frame}-${bar_pos}
+				${convert} ${main}/${image} -crop ${pos_x}x${height_frame}+${bar_pos}+0 ${output}/main.PNG
+
+				#add the chunk of second folder
+				${convert} ${second}/DSC_$(printf "%04d" ${image_helper}).JPG -crop ${bar_pos}x${height_frame}+0+0 ${output}/second.PNG
+
+				#print the separating bar, if any
+				#${convert} ${output}/BASE.PNG -fill ${color} -stroke ${color} -draw "rectangle 0,${vert_bar_pos_1} ${horiz_bar_pos_2},${vert_bar_pos_2}" -draw "rectangle ${horiz_bar_pos_1},0 ${horiz_bar_pos_2},${height_frame}" ${output}/BASE.PNG
+
+				#stitch the images
+				${composite} -geometry +0+0 ${output}/second.PNG ${output}/BASE.PNG ${output}/BASE1.PNG
+				${composite} -geometry +${bar_pos}+0 ${output}/main.PNG ${output}/BASE1.PNG ${output}/${image}
+
+				let bar_pos_n=${bar_pos_n}-1
+			fi
 		fi
 		let photonum=${photonum}+1
+		let image_helper=${image_helper}+1
 	done
 
 	#copy as many images as needed, from second folder to output
@@ -125,8 +155,9 @@ function usage(){
 	echo -e "\t./$(basename $0) -m <VALUE> -s <VALUE> -b <VALUE> -o <VALUE>"
 	echo -e "\t-m directory where the files for the main scene are"
 	echo -e "\t-s directory where the files for the second scene are"
-	echo -e "\t-t transition betwen scenes (in frames; default 10)"
-	echo -e "\t-b OPTIONAL width (in pixels) of the separation bar"
+	echo -e "\t-i transition images betwen scenes (in frames; default 10)"
+	echo -e "\t-t OPTIONAL direction of the bars ltr or rtl (default left-to-right)"
+#	echo -e "\t-b OPTIONAL width (in pixels) of the separation bar"
 	echo -e "\t-o output directory"
 #	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
 	echo -e "\t-v show version number"
@@ -139,16 +170,18 @@ function main(){
 	courtain
 }
 
-while getopts "m:s:b:o:t:aphv?" arg; do
+while getopts "m:s:b:o:i:t:aphv?" arg; do
 	case $arg in
 		m)main=${OPTARG}
 		;;
 		s)second=${OPTARG}
 		;;
-		t)transition_images=${OPTARG}
+		t)direction=${OPTARG}
 		;;
-		b)bar=${OPTARG}
+		i)transition_images=${OPTARG}
 		;;
+#		b)bar=${OPTARG}
+#		;;
 		o)output=${OPTARG}
 		;;
 #		p)preview=y

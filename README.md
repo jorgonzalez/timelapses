@@ -63,7 +63,6 @@ is ascendant (e.g. 0001-0100).
 	-p OPTIONAL (preview) applies the modifications to the first foto to see the result
 	-v show version number
 	-h show this help
-
 ```
 ## courtain.sh
 	
@@ -72,12 +71,11 @@ is ascendant (e.g. 0001-0100).
 	./courtain.sh -m <VALUE> -s <VALUE> -b <VALUE> -o <VALUE>
 	-m directory where the files for the main scene are
 	-s directory where the files for the second scene are
-	-t transition betwen scenes (in frames; default 10)
-	-b OPTIONAL width (in pixels) of the separation bar
+	-i transition images betwen scenes (in frames; default 10)
+	-t OPTIONAL direction of the bars ltr or rtl (default left-to-right)
 	-o output directory
 	-v show version number
 	-h show this help
-
 ```
 
 ## create_time_lapse.sh
