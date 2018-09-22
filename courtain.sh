@@ -8,14 +8,14 @@
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; right-to-left.
+#			v0.3; Image size verification between folders.
 #	Future imprv.:	Preview.
-#			UTD, DTU.
-#			Image size verification between folders.
+#			utd, dtu.
 #			Separation bar.
 #
 
 #Some variables
-version=0.2
+version=0.3
 identify=$(which identify-im6)
 convert=$(which convert-im6)
 composite=$(which composite-im6)
@@ -40,8 +40,6 @@ function courtain(){
 	total_images_main=`ls -l ${main} | grep DSC | wc -l`
 	width_main=`${identify} ${main}/${file_main} | awk '{ print $3 }' | awk -F"x" '{ print $1 }'`
 	height_main=`${identify} ${main}/${file_main} | awk '{ print $3 }' | awk -F"x" '{ print $2 }'`
-	width_frame=${width_main}
-	height_frame=${height_main}
 
 	file_second=`ls -al ${second}/ | grep DSC | awk '{ print $9 }' | head -n 1`
 	if [[ -z "${file_second}" ]]; then
@@ -49,6 +47,37 @@ function courtain(){
 		exit 1
 	fi
 	total_images_second=`ls -l ${second} | grep DSC | wc -l`
+	width_second=`${identify} ${main}/${file_main} | awk '{ print $3 }' | awk -F"x" '{ print $1 }'`
+	height_second=`${identify} ${main}/${file_main} | awk '{ print $3 }' | awk -F"x" '{ print $2 }'`
+
+	if [[ ${width_main} -gt ${width_second} && ${height_main} -ge ${height_second} ]]; then
+		width_frame=${width_second}
+		height_frame=${height_main}
+#		This alters the original files, do we want this?
+#		mod_ops="${mod_ops} -resize ${width_frame}"x"${height_frame}!"
+#		j=1
+#		for image in `ls -al ${main} | grep DSC | awk '{ print $9 }'`; do
+#			echo -e -n "\r\bModifying image ${j}/${total_images_main} from ${main} to match ${second}"
+#			${mogrify} ${mod_ops} ${main}/${image}
+#			let j=${j}+1
+#		done
+	elif [[ ${width_main} -lt ${width_second} && ${height_main} -le ${height_second} ]]; then
+		width_frame=${width_main}
+		height_frame=${height_main}
+#		This alters the original files, do we want this?
+#		mod_ops="${mod_ops} -resize ${width_frame}"x"${height_frame}!"
+#		j=1
+#		for image in `ls -al ${second} | grep DSC | awk '{ print $9 }'`; do
+#			echo -e -n "\r\bResizing image ${j}/${total_images_second} from ${second} to match ${main}"
+#			${mogrify} ${mod_ops} ${second}/${image}
+#			let j=${j}+1
+#		done
+	else
+		width_frame=${width_main}
+		height_frame=${height_main}
+		echo -e "Sets have the same image size, no need to resize"
+	fi
+
 
 	let total_images=${total_images_main}+${total_images_second}-${transition_images}
 
@@ -65,8 +94,11 @@ function courtain(){
 	image_helper=1
 	if [[ "${direction}" == "ltr" ]]; then
 		bar_pos_n=1
-	else
+	elif [[ "${direction}" == "rtl" ]]; then
 		bar_pos_n=${transition_images}
+	else
+		echo "ERROR: direction ${direction} is not one of 'ltr', 'rtl'."
+		exit 1
 	fi
 	let main_photos_to_copy=${total_images_main}-${transition_images}
 	for image in `ls -al ${main} | grep JPG | awk '{ print $9 }'`; do
@@ -98,7 +130,6 @@ function courtain(){
 
 				let bar_pos_n=${bar_pos_n}+1
 			else
-				### SOMETHING HERE
 				bar_pos=`echo "scale=0; (${width_frame}/${transition_images})*${bar_pos_n}" | bc`
 
 				let bar_pos=${width_frame}-${bar_pos}
