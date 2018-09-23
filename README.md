@@ -72,7 +72,7 @@ is ascendant (e.g. 0001-0100).
 	-m directory where the files for the main scene are
 	-s directory where the files for the second scene are
 	-i transition images betwen scenes (in frames; default 10)
-	-t OPTIONAL direction of the bars ltr or rtl (default left-to-right)
+	-t OPTIONAL direction of the bars ltr, rtl, utd, dtu (default left-to-right)
 	-o output directory
 	-v show version number
 	-h show this help

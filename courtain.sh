@@ -4,18 +4,19 @@
 #
 # 	Description:	Script to do a courtain transition between two sets of images.
 #
-#	Version:	0.2
+#	Version:	0.4
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; right-to-left.
 #			v0.3; Image size verification between folders.
+#			v0.4; up-to-down, down-to-up.
+#
 #	Future imprv.:	Preview.
-#			utd, dtu.
 #			Separation bar.
 #
 
 #Some variables
-version=0.3
+version=0.4
 identify=$(which identify-im6)
 convert=$(which convert-im6)
 composite=$(which composite-im6)
@@ -31,7 +32,6 @@ if [[ ! -e "${composite}" ]] || [[ ! -e "${convert}" || ! -e "${identify}" ]]; t
 fi
 
 function courtain(){
-
 	file_main=`ls -al ${main}/ | grep DSC | awk '{ print $9 }' | head -n 1`
 	if [[ -z "${file_main}" ]]; then
 		echo "There are no files to process at ${main}"
@@ -92,31 +92,33 @@ function courtain(){
 	#copy as many images as needed, from main to output, to leave only those to work on
 	photonum=1
 	image_helper=1
-	if [[ "${direction}" == "ltr" ]]; then
+	if [[ "${direction}" == "ltr" || "${direction}" == "utd" ]]; then
 		bar_pos_n=1
-	elif [[ "${direction}" == "rtl" ]]; then
-		bar_pos_n=${transition_images}
+	elif [[ "${direction}" == "rtl" || "${direction}" == "dtu" ]]; then
+		let bar_pos_n=${transition_images}
 	else
-		echo "ERROR: direction ${direction} is not one of 'ltr', 'rtl'."
+		echo "ERROR: direction ${direction} is not one of 'ltr', 'rtl', 'utd', 'dtu'."
 		exit 1
 	fi
 	let main_photos_to_copy=${total_images_main}-${transition_images}
+
+	#create a canvas
+	${convert} -size ${width_frame}x${height_frame} xc:none ${output}/BASE.PNG
+
 	for image in `ls -al ${main} | grep JPG | awk '{ print $9 }'`; do
 		if [[ ${photonum} -lt ${main_photos_to_copy} ]]; then
 			echo -e -n "\r\bCopying image ${photonum}/${total_images}"
 			cp ${main}/${image} ${output}/${image}
 		else
 			echo -e -n "\r\bModifying image ${photonum}/${total_images}"
-			#create a canvas
-			${convert} -size ${width_frame}x${height_frame} xc:none ${output}/BASE.PNG
 
 			#calculate where the bar goes
 			if [[ "${direction}" == "ltr" ]]; then
 				bar_pos=`echo "scale=0; (${width_frame}/${transition_images})*${bar_pos_n}" | bc`
 
 				#add the chunk of main
-				let pos_x=${width_frame}-${bar_pos}
-				${convert} ${main}/${image} -crop ${pos_x}x${height_frame}+${bar_pos}+0 ${output}/main.PNG
+				let pos=${width_frame}-${bar_pos}
+				${convert} ${main}/${image} -crop ${pos}x${height_frame}+${bar_pos}+0 ${output}/main.PNG
 
 				#add the chunk of second folder
 				${convert} ${second}/DSC_$(printf "%04d" ${image_helper}).JPG -crop ${bar_pos}x${height_frame}+0+0 ${output}/second.PNG
@@ -129,17 +131,15 @@ function courtain(){
 				${composite} -geometry +${bar_pos}+0 ${output}/main.PNG ${output}/BASE1.PNG ${output}/${image}
 
 				let bar_pos_n=${bar_pos_n}+1
-			else
+			elif [[ "${direction}" == "rtl" ]]; then
 				bar_pos=`echo "scale=0; (${width_frame}/${transition_images})*${bar_pos_n}" | bc`
 
-				let bar_pos=${width_frame}-${bar_pos}
-
 				#add the chunk of main
-				let pos_x=${width_frame}-${bar_pos}
-				${convert} ${main}/${image} -crop ${pos_x}x${height_frame}+${bar_pos}+0 ${output}/main.PNG
+				let pos=${width_frame}-${bar_pos}
+				${convert} ${second}/DSC_$(printf "%04d" ${image_helper}).JPG -crop ${pos}x${height_frame}+${bar_pos}+0 ${output}/main.PNG
 
 				#add the chunk of second folder
-				${convert} ${second}/DSC_$(printf "%04d" ${image_helper}).JPG -crop ${bar_pos}x${height_frame}+0+0 ${output}/second.PNG
+				${convert} ${main}/${image} -crop ${bar_pos}x${height_frame}+0+0 ${output}/second.PNG
 
 				#print the separating bar, if any
 				#${convert} ${output}/BASE.PNG -fill ${color} -stroke ${color} -draw "rectangle 0,${vert_bar_pos_1} ${horiz_bar_pos_2},${vert_bar_pos_2}" -draw "rectangle ${horiz_bar_pos_1},0 ${horiz_bar_pos_2},${height_frame}" ${output}/BASE.PNG
@@ -147,6 +147,43 @@ function courtain(){
 				#stitch the images
 				${composite} -geometry +0+0 ${output}/second.PNG ${output}/BASE.PNG ${output}/BASE1.PNG
 				${composite} -geometry +${bar_pos}+0 ${output}/main.PNG ${output}/BASE1.PNG ${output}/${image}
+
+				let bar_pos_n=${bar_pos_n}-1
+                        elif [[ "${direction}" == "utd" ]]; then
+				bar_pos=`echo "scale=0; (${height_frame}/${transition_images})*${bar_pos_n}" | bc`
+
+				#add the chunk of main
+				let pos=${height_frame}-${bar_pos}
+				${convert} ${main}/${image} -crop ${width_frame}x${pos}+0+${bar_pos} ${output}/main.PNG
+
+				#add the chunk of second folder
+				${convert} ${second}/DSC_$(printf "%04d" ${image_helper}).JPG -crop ${width_frame}x${bar_pos}+0+0 ${output}/second.PNG
+
+				#print the separating bar, if any
+				#${convert} ${output}/BASE.PNG -fill ${color} -stroke ${color} -draw "rectangle 0,${vert_bar_pos_1} ${horiz_bar_pos_2},${vert_bar_pos_2}" -draw "rectangle ${horiz_bar_pos_1},0 ${horiz_bar_pos_2},${height_frame}" ${output}/BASE.PNG
+
+				#stitch the images
+				${composite} -geometry +0+0 ${output}/second.PNG ${output}/BASE.PNG ${output}/BASE1.PNG
+				${composite} -geometry +0+${bar_pos} ${output}/main.PNG ${output}/BASE1.PNG ${output}/${image}
+
+				let bar_pos_n=${bar_pos_n}+1
+                        elif [[ "${direction}" == "dtu" ]]; then
+				### FIXME
+				bar_pos=`echo "scale=0; (${height_frame}/${transition_images})*${bar_pos_n}" | bc`
+
+				#add the chunk of main
+				let pos=${height_frame}-${bar_pos}
+				${convert} ${second}/DSC_$(printf "%04d" ${image_helper}).JPG -crop ${width_frame}x${pos}+0+${bar_pos} ${output}/main.PNG
+
+				#add the chunk of second folder
+				${convert} ${main}/${image} -crop ${width_frame}x${bar_pos}+0+0 ${output}/second.PNG
+
+				#print the separating bar, if any
+				#${convert} ${output}/BASE.PNG -fill ${color} -stroke ${color} -draw "rectangle 0,${vert_bar_pos_1} ${horiz_bar_pos_2},${vert_bar_pos_2}" -draw "rectangle ${horiz_bar_pos_1},0 ${horiz_bar_pos_2},${height_frame}" ${output}/BASE.PNG
+
+				#stitch the images
+				${composite} -geometry +0+0 ${output}/second.PNG ${output}/BASE.PNG ${output}/BASE1.PNG
+				${composite} -geometry +0+${bar_pos} ${output}/main.PNG ${output}/BASE1.PNG ${output}/${image}
 
 				let bar_pos_n=${bar_pos_n}-1
 			fi
@@ -187,7 +224,7 @@ function usage(){
 	echo -e "\t-m directory where the files for the main scene are"
 	echo -e "\t-s directory where the files for the second scene are"
 	echo -e "\t-i transition images betwen scenes (in frames; default 10)"
-	echo -e "\t-t OPTIONAL direction of the bars ltr or rtl (default left-to-right)"
+	echo -e "\t-t OPTIONAL direction of the bars ltr, rtl, utd, dtu (default left-to-right)"
 #	echo -e "\t-b OPTIONAL width (in pixels) of the separation bar"
 	echo -e "\t-o output directory"
 #	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first foto to see the result"
