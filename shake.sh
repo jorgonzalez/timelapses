@@ -4,7 +4,7 @@
 #
 # 	Description:	Script to shake an image using the base image and moving it to the sides using transparency.
 #
-#	Version:	0.2
+#	Version:	0.3
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option for total shakeness.

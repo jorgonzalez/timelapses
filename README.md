@@ -123,6 +123,18 @@ is ascendant (e.g. 0001-0100).
 	-h show this help
 ```
 
+## heartbeat.sh
+	Description:	Script to create a heartbeat effect using the base image and zooming on it.
+
+```
+	./heartbeat.sh -d <VALUE> -z <VALUE> -r
+	-d directory where the files are
+	-z Zoom factor
+	-r Random zoom factor
+	-v show version number
+	-h show this help
+```
+
 ## perspective.sh
 	Description:	Script to change the perspective of a batch of images.
 			Based on four points in the original image (A1, B1, C1,

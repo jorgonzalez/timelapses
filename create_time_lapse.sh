@@ -91,7 +91,7 @@ function timestamp(){
 }
 
 function create_video(){
-	if [[ "${recurisve}" == "y" ]]; then
+	if [[ "${recursive}" == "y" ]]; then
 		for dir in `ls -ald ${SourceDir}/* | awk '{ print $9 }'`; do
 			dir=`pwd`/${dir}
 			create_timelapse ${dir}

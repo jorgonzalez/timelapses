@@ -110,7 +110,7 @@ function perspective(){
 function usage(){
 	echo -e "\t./$(basename $0) -d <VALUE> -A <VALUE> -B <VALUE> -C <VALUE> -D <VALUE>"
 	echo -e "\t-d directory where the files are"
-	echo -e "\t-A -B -C -D pairs of coordinates to be mapped from (A1=600,1000;B1=600,2500;C1=3600,2500;D1=3600,1000)"
+	echo -e "\t-A -B -C -D pairs of coordinates to be mapped from (A=600,1000;B=600,2500;C=3600,2500;D=3600,1000)"
 	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first photo to see the result"
 	echo -e "\t-f OPTIONAL force 16:9 perspective"
 	echo -e "\t-v show version number"
