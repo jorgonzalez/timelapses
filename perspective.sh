@@ -9,7 +9,7 @@
 #			Takes the directory to work on as argument.
 #			If there is a second argument, only generates the preview of the output.
 #
-#	Version:	0.4
+#	Version:	0.7
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; rudimentary preview passing a second argument.
@@ -17,12 +17,13 @@
 #			v0.4; hardcoded binaries removed for which
 #			v0.5; allow dots and commas as coordinate separator (easier if using keypad).
 #			v0.6; remove resizing option if there is no crop. Use original size if cropping instead of hardcoded value.
+#			v0.7; fixed version number; fixed comment on options.
 #
 #	Future imprv.:	Beter argument check and validation.
 #
 
 #Some variables
-version=0.6
+version=0.7
 convert=$(which convert-im6)
 identify=$(which identify-im6)
 
@@ -110,7 +111,7 @@ function perspective(){
 function usage(){
 	echo -e "\t./$(basename $0) -d <VALUE> -A <VALUE> -B <VALUE> -C <VALUE> -D <VALUE>"
 	echo -e "\t-d directory where the files are"
-	echo -e "\t-A -B -C -D pairs of coordinates to be mapped from (A=600,1000;B=600,2500;C=3600,2500;D=3600,1000)"
+	echo -e "\t-A -B -C -D pairs of coordinates to be mapped (from A=600,1000;B=600,2500;C=3600,2500;D=3600,1000)"
 	echo -e "\t-p OPTIONAL (preview) applies the modifications to the first photo to see the result"
 	echo -e "\t-f OPTIONAL force 16:9 perspective"
 	echo -e "\t-v show version number"
