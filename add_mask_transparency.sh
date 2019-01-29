@@ -4,18 +4,19 @@
 #
 # 	Description:	Script to apply a mask to a set of pictures in an directory.
 #
-#	Version:	0.4
+#	Version:	0.5
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option progressive application of the mask; reverse progression of the mask.
 #			v0.3; preview.
-#			v0.4; hardcoded binaries removed for which
+#			v0.4; hardcoded binaries removed for which.
+#			v0.5; fixed broken progressive option.
 #
 #	Future imprv.:	
 #
 
 #Some variables
-version=0.4
+version=0.5
 mogrify=$(which mogrify-im6)
 convert=$(which convert-im6)
 identify=$(which identify-im6)
@@ -72,10 +73,10 @@ function mask(){
 				file_num=`echo ${i} | cut -b 5-8`
 				curr_perc=`echo "${j}*${perc}" | bc -l | cut -c -4`
 				${convert} ${mask} -alpha set -channel A -evaluate subtract ${curr_perc}% ${dir}/mask_${file_num}.PNG
-				let j=${j}-1
+#				let j=${j}-1
 				${convert} ${dir}/${i} -page +0+0 ${dir}/mask_${file_num}.PNG -flatten ${dir}/${i}
 				rm ${dir}/mask_${file_num}.PNG
-				let j=${j}+1
+				let j=${j}-1
 			done
 		fi
 	elif [[ "${reverse}" == "y" ]]; then
@@ -96,7 +97,7 @@ function mask(){
 				file_num=`echo ${i} | cut -b 5-8`
 				curr_perc=`echo "${j}*${perc}" | bc -l | cut -c -4`
 				${convert} ${mask} -alpha set -channel A -evaluate subtract ${curr_perc}% ${dir}/mask_${file_num}.PNG
-				let j=${j}+1
+#				let j=${j}+1
 				${convert} ${dir}/${i} -page +0+0 ${dir}/mask_${file_num}.PNG -flatten ${dir}/${i}
 				rm ${dir}/mask_${file_num}.PNG
 				let j=${j}+1
