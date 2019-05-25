@@ -142,6 +142,7 @@ is ascendant (e.g. 0001-0100).
 	./merge.sh -m <VALUE> -s <VALUE> -f <VALUE> -o <VALUE>
 	-m directory where the files for the first scene are
 	-s directory where the files for the second scene are
+	-t total number of images to have in the final scene
 	-f frames to use from each scene before changing to another
 	-o output directory
 	-v show version number

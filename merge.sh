@@ -4,15 +4,16 @@
 #
 # 	Description:	Script to merge two scenes into one using a number of frames from each.
 #
-#	Version:	0.1
+#	Version:	0.2
 #
 #	Modifications:	v0.1; first version.
+#			v0.2; added option to have a max. number of images in output scene
 #
 #	Future imprv.:
 #
 
 #Some variables
-version=0.1
+version=0.2
 identify=$(which identify-im6)
 convert=$(which convert-im6)
 composite=$(which composite-im6)
@@ -34,7 +35,6 @@ function section(){
 	for frame in $(seq 1 ${frames}); do
 		image_file="DSC_"$(printf %04d ${working_image}).JPG
 		final_image_file="DSC_"$(printf %04d ${final_image}).JPG
-		echo "${scene}/${image_file}"
 		cp ${scene}/${image_file} ${output}/${final_image_file}
 		let working_image=${working_image}+1
 		let final_image=${final_image}+1
@@ -76,7 +76,7 @@ function merge(){
 	#create the output directory
 	mkdir -p ${output}
 
-	total_images=${total_images_main}
+	let total_images=${total}/2
 	if [[ "${total_images}" -gt "${total_images_second}" ]]; then
 		total_images=${total_images_second}
 	fi
@@ -96,6 +96,7 @@ function merge(){
 
 		let current_image=${current_image}+${frames}
 		let total_counter=${final_image}/2
+		echo ${total_counter}" "${final_image}" "${total_images}
 	done
 }
 
@@ -116,7 +117,7 @@ function usage(){
 	echo -e "\t./$(basename $0) -m <VALUE> -s <VALUE> -f <VALUE> -o <VALUE>"
 	echo -e "\t-m directory where the files for the first scene are"
 	echo -e "\t-s directory where the files for the second scene are"
-#	echo -e "\t-t directory where the files for the third scene are"
+	echo -e "\t-t total number of images to have in the final scene"
 	echo -e "\t-f frames to use from each scene before changing to another"
 	echo -e "\t-o output directory"
 	echo -e "\t-v show version number"
@@ -135,8 +136,8 @@ while getopts "m:s:t:f:o:phv?" arg; do
 		;;
 		s)second=${OPTARG}
 		;;
-#		t)third=${OPTARG}
-#		;;
+		t)total=${OPTARG}
+		;;
 		f)frames=${OPTARG}
 		;;
 		o)output=${OPTARG}
