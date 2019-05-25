@@ -8,7 +8,7 @@
 #			contrast, normalize the contrast in the pictures (by histogram), and fade in-out.
 #			Requires imagemagick, ffmpeg and mencoder.
 #
-#	Version:	0.27
+#	Version:	0.28
 #
 #	Modifications:	v0.1; fade in-out feature.
 #			v0.2; crawl through directories in the output directory.
@@ -29,14 +29,15 @@
 #			v0.17; Output the first image of the changes as a test if an option is passed.
 #			v0.18; Option to input frames per second.
 #			v0.19; More verbosed output (timers); variables between brackets.
-#			v0.20; Include cores on Imagemagick processing
-#			v0.21; Option for smoothing hyperlapse, requires ffmpeg2 (ffmpeg with -vf vidstab) https://launchpad.net/~mc3man/+archive/ubuntu/ffmpeg-test
-#			v0.22; Change tint color
-#			v0.23; Deflicker video; fix preview for tint
+#			v0.20; Include cores on Imagemagick processing.
+#			v0.21; Option for smoothing hyperlapse, requires ffmpeg2 (ffmpeg with -vf vidstab) https://launchpad.net/~mc3man/+archive/ubuntu/ffmpeg-test.
+#			v0.22; Change tint color.
+#			v0.23; Deflicker video; fix preview for tint.
 #			v0.24; Change levels of white point, black point.
 #			v0.25; Added ugly code for rounidng image proportions when resizing.
 #			v0.26; hardcoded binaries removed for which.
 #			v0.27; meconder and ffmpeg2 binary substituted for which.
+#			v0.28; recursive option changed to -D.
 #
 #	Future imprv.:	Beter argument check and validation.
 #			Cancel video creation if dimensions exceed certain overlay.
@@ -44,7 +45,7 @@
 #
 
 #Some variables
-version=0.27
+version=0.28
 #Directory where the video will be written
 OutDir=A_Done
 #Original directory to search for the pictures
@@ -519,7 +520,7 @@ function usage(){
 	echo -e "\t-r OPTIONAL (resize) the value of the new width; new height will be in proportion (e.g.: 2560, 2048, 1920, 1600, 1440, 1280, 1024...)"
 	echo -e "\t-f OPTIONAL (fade) the number of frames for the fade-in and fade-out"
 	echo -e "\t-d OPTIONAL (directory) to execute this script"
-	echo -e "\t-u OPTIONAL (recursive) recursively crawl through the directories to create videos"
+	echo -e "\t-D OPTIONAL (recursive) recursively crawl through the directories to create videos"
 	echo -e "\t-a OPTIONAL frames per second (default is 25)"
 	echo -e "\t-m OPTIONAL (monochrome) grayscale video output"
 	echo -e "\t-e OPTIONAL (enhance) modify image contrast stretching the range of intensity by black point white point percentage, e.g. <1x2%>"
@@ -554,7 +555,7 @@ function main(){
 	create_video
 }
 
-while getopts "r:f:a:ud:mie:b:w:nc:l:t:z:s:R:ypkxhv?" arg; do
+while getopts "r:f:a:Dd:mie:b:w:nc:l:t:z:s:R:ypkxhv?" arg; do
 	case ${arg} in
 		r)new_width=${OPTARG}
 		;;
@@ -562,7 +563,7 @@ while getopts "r:f:a:ud:mie:b:w:nc:l:t:z:s:R:ypkxhv?" arg; do
 		;;
 		d)directory=${OPTARG}
 		;;
-		u)recursive=y
+		D)recursive=y
 		;;
 		a)fps=${OPTARG}
 		;;
