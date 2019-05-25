@@ -7,13 +7,14 @@
 #	Version:	0.2
 #
 #	Modifications:	v0.1; first version.
-#			v0.2; added option to have a max. number of images in output scene
+#			v0.2; added option to have a max. number of images in output scene.
+#			v0.3; fixed total number of images bug logic.
 #
 #	Future imprv.:
 #
 
 #Some variables
-version=0.2
+version=0.3
 identify=$(which identify-im6)
 convert=$(which convert-im6)
 composite=$(which composite-im6)
@@ -76,9 +77,12 @@ function merge(){
 	#create the output directory
 	mkdir -p ${output}
 
-	let total_images=${total}/2
-	if [[ "${total_images}" -gt "${total_images_second}" ]]; then
+	if [[ -z ${total} && "${total_images_main}" -gt "${total_images_second}" ]]; then
 		total_images=${total_images_second}
+	elif [[ -z ${total} && "${total_images_main}" -le "${total_images_second}" ]]; then
+		total_images=${total_images_main}
+	else
+		total_images=${total}
 	fi
 
 	total_counter=1
