@@ -4,7 +4,7 @@
 #
 # 	Description:	Script to blend two videos together.
 #
-#	Version:	0.1
+#	Version:	0.2
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; option progressive application of the mask; reverse progression of the mask.

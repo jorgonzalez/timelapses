@@ -12,7 +12,7 @@
 #			v0.4; hardcoded binaries removed for which.
 #			v0.5; fixed broken progressive option.
 #
-#	Future imprv.:	
+#	Future imprv.:
 #
 
 #Some variables

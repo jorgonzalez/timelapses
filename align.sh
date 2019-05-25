@@ -4,7 +4,7 @@
 #
 # 	Description:	Script to align images in a directory. Uses align_image_stack binary from hugin.
 #
-#	Version:	0.6
+#	Version:	0.7
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; changed alegned options to force given order.
@@ -12,7 +12,7 @@
 #			v0.4; option to break the images in a rectangular grid for control points.
 #			v0.5; option to define and use block processing.
 #			v0.6; option to create a copy of the target directory before aligning.
-#			v0.7; hardcoded binaries removed for which
+#			v0.7; hardcoded binaries removed for which.
 #
 #	Future imprv.:	Preview.
 #

@@ -7,7 +7,7 @@
 #	Version:	0.2
 #
 #	Modifications:	v0.1; first version.
-#			v0.2; hardcoded binaries removed for which
+#			v0.2; hardcoded binaries removed for which.
 #
 #	Future imprv.:	Beter argument check and validation.
 #			Proper option function.

@@ -9,7 +9,7 @@
 #	Modifications:	v0.1; first version.
 #			v0.2; option to reverse background images.
 #			v0.3; preview.
-#			v0.4; hardcoded binaries removed for which
+#			v0.4; hardcoded binaries removed for which.
 #
 #	Future imprv.:	
 #

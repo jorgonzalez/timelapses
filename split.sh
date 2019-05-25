@@ -9,7 +9,7 @@
 #	Modifications:	v0.1; first version.
 #			v0.2; option chunk: percentage of the first image to take.
 #			v0.3; option compose: show whole main scene, then split in half showing both scenes, then show whole second scene.
-#			v0.4; hardcoded binaries removed for which
+#			v0.4; hardcoded binaries removed for which.
 #
 #	Future imprv.:	Compose 3 scenes.
 #			Transition from 1st scene to 2nd scene using the separation bar.

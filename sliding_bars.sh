@@ -12,7 +12,7 @@
 #			v0.4; fade out.
 #
 #
-#	Future imprv.:	preview; better check of width/bar_numer
+#	Future imprv.:	preview; better check of width/bar_numer.
 #
 
 #Some variables

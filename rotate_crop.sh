@@ -4,12 +4,12 @@
 #
 # 	Description:	Script to align rotate and crop batches of images in the same directory.
 #
-#	Version:	0.3
+#	Version:	0.4
 #
 #	Modifications:	v0.1; first version.
 #			v0.2; added option to cut pixels from output.
 #			v0.3; grouped in pairs pxiel cut.
-#			v0.4; hardcoded binaries removed for which
+#			v0.4; hardcoded binaries removed for which.
 #
 #	Future imprv.:
 #

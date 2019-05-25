@@ -10,11 +10,10 @@
 #			If there is a second argument, only generates the preview of the output.
 #
 #	Version:	0.7
-#
 #	Modifications:	v0.1; first version.
 #			v0.2; rudimentary preview passing a second argument.
-#			v0.3; use optarg
-#			v0.4; hardcoded binaries removed for which
+#			v0.3; use optarg.
+#			v0.4; hardcoded binaries removed for which.
 #			v0.5; allow dots and commas as coordinate separator (easier if using keypad).
 #			v0.6; remove resizing option if there is no crop. Use original size if cropping instead of hardcoded value.
 #			v0.7; fixed version number; fixed comment on options.
