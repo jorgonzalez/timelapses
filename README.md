@@ -135,6 +135,19 @@ is ascendant (e.g. 0001-0100).
 	-h show this help
 ```
 
+## merge.sh
+	Description:	Script to merge two scenes into one using a number of frames from each.
+
+```
+	./merge.sh -m <VALUE> -s <VALUE> -f <VALUE> -o <VALUE>
+	-m directory where the files for the first scene are
+	-s directory where the files for the second scene are
+	-f frames to use from each scene before changing to another
+	-o output directory
+	-v show version number
+	-h show this help
+```
+
 ## perspective.sh
 	Description:	Script to change the perspective of a batch of images.
 			Based on four points in the original image (A1, B1, C1,
