@@ -86,7 +86,8 @@ is ascendant (e.g. 0001-0100).
 			white movie, enhance the picutres by modifiying the
 			contrast, normalize the contrast in the pictures
 			(by histogram), and fade in-out. 
-			Requires imagemagick, ffmpeg and mencoder.
+			Requires imagemagick, ffmpeg with libvidstab enabled
+			(ffmpeg2) and mencoder.
 
 ```
 	./create_time_lapse.sh -r <VALUE> -f <VALUE> -d -a <VALUE> -m -e <VALUE> -b <VALUE> -n -f <VALUE> -c <VALUE> -l <VALUE> -t <TEXT> -z <VALUE>

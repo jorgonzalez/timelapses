@@ -6,7 +6,7 @@
 #			keeping the proportion, crawl through directories of the target directory where the
 #			pictures are, output a black and white movie, enhance the picutres by modifiying the
 #			contrast, normalize the contrast in the pictures (by histogram), and fade in-out.
-#			Requires imagemagick, ffmpeg and mencoder.
+#			Requires imagemagick, ffmpeg with libvidstab enabled (ffmpeg2) and mencoder.
 #
 #	Version:	0.28
 #
