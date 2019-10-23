@@ -8,7 +8,7 @@
 #			contrast, normalize the contrast in the pictures (by histogram), and fade in-out.
 #			Requires imagemagick, ffmpeg with libvidstab enabled (ffmpeg2) and mencoder.
 #
-#	Version:	0.28
+#	Version:	0.29
 #
 #	Modifications:	v0.1; fade in-out feature.
 #			v0.2; crawl through directories in the output directory.
@@ -38,6 +38,7 @@
 #			v0.26; hardcoded binaries removed for which.
 #			v0.27; meconder and ffmpeg2 binary substituted for which.
 #			v0.28; recursive option changed to -D.
+#			v0.29; remove mpegTool2, debian/ubuntu ffmpeg is now compiled with vidstab support.
 #
 #	Future imprv.:	Beter argument check and validation.
 #			Cancel video creation if dimensions exceed certain overlay.
@@ -45,7 +46,7 @@
 #
 
 #Some variables
-version=0.28
+version=0.29
 #Directory where the video will be written
 OutDir=A_Done
 #Original directory to search for the pictures
@@ -59,15 +60,11 @@ convert=$(which convert-im6)
 identify=$(which identify-im6)
 mencoderBin=$(which mencoder)
 mpegTool="/usr/bin/ffmpeg"
-mpegTool2="/usr/bin/ffmpeg2"
 
 
 #Check if we have all the needed software
 if [[ ! -e ${mpegTool} ]]; then
 	echo "You are missing ${mpegTool}, please install ffmpeg/libav-tools for your distribution"
-	exit 1
-elif [[ ! -e ${mpegTool2} ]]; then
-	echo "You are missing ${mpegTool2}, please install ffmpeg-static libfdk-aac1 libopenjpeg5 libvidstab1.0 libx265 transcode"
 	exit 1
 elif [[ ! -e ${mencoderBin} ]]; then
 	echo "You are missing mencoder, please install it for your distribution"
@@ -484,8 +481,8 @@ function create_timelapse(){
 			timestamp17=`date +%s`
 			finaloutfile_hyperlapse=${outdir}'/hyperlapse_'${outname}'_'${quality}'_'${fps}'fps_'`date +"%Y_%m_%d_%H-%M-%S"`'.avi'
 			rm ${vectors}  2>/dev/null
-			${mpegTool2} -v 0 -i ${finaloutfile} -vf vidstabdetect=stepsize=6:shakiness=8:accuracy=9:result=${vectors} -f null -
-			${mpegTool2} -v 0 -i ${finaloutfile} -vf vidstabtransform=input=${vectors}:zoom=1:smoothing=30,unsharp=5:5:0.8:3:3:0.4 -vcodec libx264 -preset slow -tune film -crf 18 ${finaloutfile_hyperlapse}
+			${mpegTool} -v 0 -i ${finaloutfile} -vf vidstabdetect=stepsize=6:shakiness=8:accuracy=9:result=${vectors} -f null -
+			${mpegTool} -v 0 -i ${finaloutfile} -vf vidstabtransform=input=${vectors}:zoom=1:smoothing=30,unsharp=5:5:0.8:3:3:0.4 -vcodec libx264 -preset slow -tune film -crf 18 ${finaloutfile_hyperlapse}
 			rm ${vectors} ${finaloutfile} 2>/dev/null
 			timestamp18=`date +%s`
 			timestamp ${timestamp17} ${timestamp18} "Smoothing hyperlapse"
